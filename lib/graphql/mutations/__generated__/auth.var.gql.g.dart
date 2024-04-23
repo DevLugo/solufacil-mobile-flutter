@@ -6,16 +6,17 @@ part of 'auth.var.gql.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<GsignUpVars> _$gsignUpVarsSerializer = new _$GsignUpVarsSerializer();
+Serializer<GSignUpVars> _$gSignUpVarsSerializer = new _$GSignUpVarsSerializer();
+Serializer<GSignInVars> _$gSignInVarsSerializer = new _$GSignInVarsSerializer();
 
-class _$GsignUpVarsSerializer implements StructuredSerializer<GsignUpVars> {
+class _$GSignUpVarsSerializer implements StructuredSerializer<GSignUpVars> {
   @override
-  final Iterable<Type> types = const [GsignUpVars, _$GsignUpVars];
+  final Iterable<Type> types = const [GSignUpVars, _$GSignUpVars];
   @override
-  final String wireName = 'GsignUpVars';
+  final String wireName = 'GSignUpVars';
 
   @override
-  Iterable<Object?> serialize(Serializers serializers, GsignUpVars object,
+  Iterable<Object?> serialize(Serializers serializers, GSignUpVars object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
       'input',
@@ -27,9 +28,9 @@ class _$GsignUpVarsSerializer implements StructuredSerializer<GsignUpVars> {
   }
 
   @override
-  GsignUpVars deserialize(Serializers serializers, Iterable<Object?> serialized,
+  GSignUpVars deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new GsignUpVarsBuilder();
+    final result = new GSignUpVarsBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -49,28 +50,69 @@ class _$GsignUpVarsSerializer implements StructuredSerializer<GsignUpVars> {
   }
 }
 
-class _$GsignUpVars extends GsignUpVars {
+class _$GSignInVarsSerializer implements StructuredSerializer<GSignInVars> {
   @override
-  final _i1.GUserCreateInput input;
+  final Iterable<Type> types = const [GSignInVars, _$GSignInVars];
+  @override
+  final String wireName = 'GSignInVars';
 
-  factory _$GsignUpVars([void Function(GsignUpVarsBuilder)? updates]) =>
-      (new GsignUpVarsBuilder()..update(updates))._build();
+  @override
+  Iterable<Object?> serialize(Serializers serializers, GSignInVars object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object?>[
+      'input',
+      serializers.serialize(object.input,
+          specifiedType: const FullType(_i1.GSignInInput)),
+    ];
 
-  _$GsignUpVars._({required this.input}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(input, r'GsignUpVars', 'input');
+    return result;
   }
 
   @override
-  GsignUpVars rebuild(void Function(GsignUpVarsBuilder) updates) =>
+  GSignInVars deserialize(Serializers serializers, Iterable<Object?> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new GSignInVarsBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current! as String;
+      iterator.moveNext();
+      final Object? value = iterator.current;
+      switch (key) {
+        case 'input':
+          result.input.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(_i1.GSignInInput))!
+              as _i1.GSignInInput);
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$GSignUpVars extends GSignUpVars {
+  @override
+  final _i1.GUserCreateInput input;
+
+  factory _$GSignUpVars([void Function(GSignUpVarsBuilder)? updates]) =>
+      (new GSignUpVarsBuilder()..update(updates))._build();
+
+  _$GSignUpVars._({required this.input}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(input, r'GSignUpVars', 'input');
+  }
+
+  @override
+  GSignUpVars rebuild(void Function(GSignUpVarsBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  GsignUpVarsBuilder toBuilder() => new GsignUpVarsBuilder()..replace(this);
+  GSignUpVarsBuilder toBuilder() => new GSignUpVarsBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is GsignUpVars && input == other.input;
+    return other is GSignUpVars && input == other.input;
   }
 
   @override
@@ -83,22 +125,22 @@ class _$GsignUpVars extends GsignUpVars {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(r'GsignUpVars')..add('input', input))
+    return (newBuiltValueToStringHelper(r'GSignUpVars')..add('input', input))
         .toString();
   }
 }
 
-class GsignUpVarsBuilder implements Builder<GsignUpVars, GsignUpVarsBuilder> {
-  _$GsignUpVars? _$v;
+class GSignUpVarsBuilder implements Builder<GSignUpVars, GSignUpVarsBuilder> {
+  _$GSignUpVars? _$v;
 
   _i1.GUserCreateInputBuilder? _input;
   _i1.GUserCreateInputBuilder get input =>
       _$this._input ??= new _i1.GUserCreateInputBuilder();
   set input(_i1.GUserCreateInputBuilder? input) => _$this._input = input;
 
-  GsignUpVarsBuilder();
+  GSignUpVarsBuilder();
 
-  GsignUpVarsBuilder get _$this {
+  GSignUpVarsBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _input = $v.input.toBuilder();
@@ -108,23 +150,23 @@ class GsignUpVarsBuilder implements Builder<GsignUpVars, GsignUpVarsBuilder> {
   }
 
   @override
-  void replace(GsignUpVars other) {
+  void replace(GSignUpVars other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$GsignUpVars;
+    _$v = other as _$GSignUpVars;
   }
 
   @override
-  void update(void Function(GsignUpVarsBuilder)? updates) {
+  void update(void Function(GSignUpVarsBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  GsignUpVars build() => _build();
+  GSignUpVars build() => _build();
 
-  _$GsignUpVars _build() {
-    _$GsignUpVars _$result;
+  _$GSignUpVars _build() {
+    _$GSignUpVars _$result;
     try {
-      _$result = _$v ?? new _$GsignUpVars._(input: input.build());
+      _$result = _$v ?? new _$GSignUpVars._(input: input.build());
     } catch (_) {
       late String _$failedField;
       try {
@@ -132,7 +174,99 @@ class GsignUpVarsBuilder implements Builder<GsignUpVars, GsignUpVarsBuilder> {
         input.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            r'GsignUpVars', _$failedField, e.toString());
+            r'GSignUpVars', _$failedField, e.toString());
+      }
+      rethrow;
+    }
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$GSignInVars extends GSignInVars {
+  @override
+  final _i1.GSignInInput input;
+
+  factory _$GSignInVars([void Function(GSignInVarsBuilder)? updates]) =>
+      (new GSignInVarsBuilder()..update(updates))._build();
+
+  _$GSignInVars._({required this.input}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(input, r'GSignInVars', 'input');
+  }
+
+  @override
+  GSignInVars rebuild(void Function(GSignInVarsBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  GSignInVarsBuilder toBuilder() => new GSignInVarsBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is GSignInVars && input == other.input;
+  }
+
+  @override
+  int get hashCode {
+    var _$hash = 0;
+    _$hash = $jc(_$hash, input.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper(r'GSignInVars')..add('input', input))
+        .toString();
+  }
+}
+
+class GSignInVarsBuilder implements Builder<GSignInVars, GSignInVarsBuilder> {
+  _$GSignInVars? _$v;
+
+  _i1.GSignInInputBuilder? _input;
+  _i1.GSignInInputBuilder get input =>
+      _$this._input ??= new _i1.GSignInInputBuilder();
+  set input(_i1.GSignInInputBuilder? input) => _$this._input = input;
+
+  GSignInVarsBuilder();
+
+  GSignInVarsBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _input = $v.input.toBuilder();
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(GSignInVars other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$GSignInVars;
+  }
+
+  @override
+  void update(void Function(GSignInVarsBuilder)? updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  GSignInVars build() => _build();
+
+  _$GSignInVars _build() {
+    _$GSignInVars _$result;
+    try {
+      _$result = _$v ?? new _$GSignInVars._(input: input.build());
+    } catch (_) {
+      late String _$failedField;
+      try {
+        _$failedField = 'input';
+        input.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            r'GSignInVars', _$failedField, e.toString());
       }
       rethrow;
     }

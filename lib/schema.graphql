@@ -317,6 +317,7 @@ type State {
 type User {
   id: ID!
   employeeId: ID
+  employee: Employee!
   email: String!
   password: String!
   lastLogin: DateTime

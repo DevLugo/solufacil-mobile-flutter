@@ -9,23 +9,44 @@ import 'package:solufacil_mobile/__generated__/serializers.gql.dart' as _i2;
 
 part 'auth.var.gql.g.dart';
 
-abstract class GsignUpVars implements Built<GsignUpVars, GsignUpVarsBuilder> {
-  GsignUpVars._();
+abstract class GSignUpVars implements Built<GSignUpVars, GSignUpVarsBuilder> {
+  GSignUpVars._();
 
-  factory GsignUpVars([void Function(GsignUpVarsBuilder b) updates]) =
-      _$GsignUpVars;
+  factory GSignUpVars([void Function(GSignUpVarsBuilder b) updates]) =
+      _$GSignUpVars;
 
   _i1.GUserCreateInput get input;
-  static Serializer<GsignUpVars> get serializer => _$gsignUpVarsSerializer;
+  static Serializer<GSignUpVars> get serializer => _$gSignUpVarsSerializer;
 
   Map<String, dynamic> toJson() => (_i2.serializers.serializeWith(
-        GsignUpVars.serializer,
+        GSignUpVars.serializer,
         this,
       ) as Map<String, dynamic>);
 
-  static GsignUpVars? fromJson(Map<String, dynamic> json) =>
+  static GSignUpVars? fromJson(Map<String, dynamic> json) =>
       _i2.serializers.deserializeWith(
-        GsignUpVars.serializer,
+        GSignUpVars.serializer,
+        json,
+      );
+}
+
+abstract class GSignInVars implements Built<GSignInVars, GSignInVarsBuilder> {
+  GSignInVars._();
+
+  factory GSignInVars([void Function(GSignInVarsBuilder b) updates]) =
+      _$GSignInVars;
+
+  _i1.GSignInInput get input;
+  static Serializer<GSignInVars> get serializer => _$gSignInVarsSerializer;
+
+  Map<String, dynamic> toJson() => (_i2.serializers.serializeWith(
+        GSignInVars.serializer,
+        this,
+      ) as Map<String, dynamic>);
+
+  static GSignInVars? fromJson(Map<String, dynamic> json) =>
+      _i2.serializers.deserializeWith(
+        GSignInVars.serializer,
         json,
       );
 }

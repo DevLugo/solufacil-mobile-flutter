@@ -31,11 +31,18 @@ import 'package:solufacil_mobile/__generated__/schema.schema.gql.dart'
         GSignInInput,
         GUserCreateInput;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.data.gql.dart'
-    show GsignUpData, GsignUpData_signUp;
+    show
+        GSignInData,
+        GSignInData_signIn,
+        GSignInData_signIn_user,
+        GSignInData_signIn_user_employee,
+        GSignInData_signIn_user_employee_personalData,
+        GSignUpData,
+        GSignUpData_signUp;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.dart'
-    show GsignUpReq;
+    show GSignInReq, GSignUpReq;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.var.gql.dart'
-    show GsignUpVars;
+    show GSignInVars, GSignUpVars;
 
 part 'serializers.gql.g.dart';
 
@@ -62,11 +69,18 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GPaymentScheduleWhereInput,
   GPaymentState,
   GRouteWhereInput,
+  GSignInData,
+  GSignInData_signIn,
+  GSignInData_signIn_user,
+  GSignInData_signIn_user_employee,
+  GSignInData_signIn_user_employee_personalData,
   GSignInInput,
+  GSignInReq,
+  GSignInVars,
+  GSignUpData,
+  GSignUpData_signUp,
+  GSignUpReq,
+  GSignUpVars,
   GUserCreateInput,
-  GsignUpData,
-  GsignUpData_signUp,
-  GsignUpReq,
-  GsignUpVars,
 ])
 final Serializers serializers = _serializersBuilder.build();

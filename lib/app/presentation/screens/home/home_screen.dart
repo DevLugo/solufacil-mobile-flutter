@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     print('incrementing counter');
     initClient().then((client) {
-      final createReviewReq = GsignUpReq(
+      final createReviewReq = GSignUpReq(
         (b) => b
           ..vars.input.email = '${generateRandomString(10)}@example.com'
           ..vars.input.password = 'password'

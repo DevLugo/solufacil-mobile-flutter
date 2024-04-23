@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solufacil_mobile/data/remote/client.dart';
+import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.dart';
 
 class SignInScreen extends StatelessWidget {
   @override
@@ -55,7 +57,42 @@ class SignInScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // set the user as authenticated as atuthenticated
-                  context.read<AuthenticationCubit>().logIn();
+                  initClient().then((client) {
+                    final createReviewReq = GSignInReq(
+                      (b) => b
+                        ..vars.input.email = '6cbVxMJOHu@example.com'
+                        ..vars.input.password = 'password1'
+                    );
+                    print("requesting");
+                    client.request(createReviewReq).listen((response) {
+                      print("inside listen");
+                      print(response.data?.signIn);
+                      if(response.data?.signIn != null){
+                        print("User is authenticated");
+                        context.read<AuthenticationCubit>().logIn();
+                      }else{
+                        print("User is not authenticated");
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Autenficación fallida'),
+                              content: Text('Email o password incorrecto. Por favor, intenta de nuevo.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    });
+                  });
+                  
 
                 },
                 child: Text('Sign In'),
