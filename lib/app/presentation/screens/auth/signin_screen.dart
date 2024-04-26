@@ -1,30 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solufacil_mobile/app/presentation/blocs/route_cubit/route_cubit.dart';
 import 'package:solufacil_mobile/data/remote/client.dart';
+import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.ast.gql.dart';
 import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.dart';
 
 class SignInScreen extends StatelessWidget {
+  final String? title;
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  
+    SignInScreen({Key? key, this.title}) : super(key: key);
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sign In'),
-      ),
+     appBar: AppBar(
+        title: Text('Token: ${title}'),
+      ),    
+  
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Sign In',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 decoration: BoxDecoration(
@@ -32,13 +43,14 @@ class SignInScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: TextFormField(
-                  decoration: InputDecoration(
+                  controller: emailController,
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                     border: InputBorder.none,
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 decoration: BoxDecoration(
@@ -46,63 +58,39 @@ class SignInScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: TextFormField(
-                  decoration: InputDecoration(
+                  controller: passwordController,
+                  decoration: const InputDecoration(
                     labelText: 'Password',
                     border: InputBorder.none,
                   ),
                   obscureText: true,
                 ),
               ),
-              SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  // set the user as authenticated as atuthenticated
-                  initClient().then((client) {
-                    final createReviewReq = GSignInReq(
-                      (b) => b
-                        ..vars.input.email = '6cbVxMJOHu@example.com'
-                        ..vars.input.password = 'password1'
-                    );
-                    print("requesting");
-                    client.request(createReviewReq).listen((response) {
-                      print("inside listen");
-                      print(response.data?.signIn);
-                      if(response.data?.signIn != null){
-                        print("User is authenticated");
-                        context.read<AuthenticationCubit>().logIn();
-                      }else{
-                        print("User is not authenticated");
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Autenficación fallida'),
-                              content: Text('Email o password incorrecto. Por favor, intenta de nuevo.'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
+              const SizedBox(height: 32),
+              BlocBuilder<AuthenticationCubit, AuthenticationState>(
+                builder: (context, state) {
+                  return ElevatedButton(
+                    onPressed: state.isSubmitting
+                        ? null
+                        : () {
+                            context.read<AuthenticationCubit>().authenticateUser(
+                              context,
+                              emailController.text,
+                              passwordController.text,
                             );
                           },
-                        );
-                      }
-                    });
-                  });
-                  
-
+                    child: state.isSubmitting
+                        ? CircularProgressIndicator()
+                        : Text('Acceder'),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
+                    ),
+                  );
                 },
-                child: Text('Sign In'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20),
-                ),
-              ),
+              )
             ],
           ),
         ),

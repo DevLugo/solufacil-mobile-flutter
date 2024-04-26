@@ -10,13 +10,12 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) {
-        return BlocBuilder<AuthenticationCubit, AuthenticationStatus>(
-          builder: (context, status) {
-            if (status == AuthenticationStatus.authenticated) {
-              return const MyHomePage(title: "UNO",);
+        return BlocBuilder<AuthenticationCubit, AuthenticationState>(
+          builder: (context, state) {
+            if (state.status == AuthenticationStatus.authenticated) {
+              return MyHomePage(title: AuthenticationStatus.authenticated.toString());
             } else {
-              return SignInScreen();
-              //return const LoginScreen();
+              return SignInScreen(title: state.fullName);
             }
           },
         );

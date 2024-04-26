@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
+import 'package:solufacil_mobile/app/presentation/screens/shared/drawer_menu/drawer_menu.dart';
 import 'package:solufacil_mobile/data/remote/client.dart';
 import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.dart';
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solufacil_mobile/graphql/queries/__generated__/route.req.gql.dart';
 
 
 String generateRandomString(int length) {
@@ -34,7 +36,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
@@ -43,10 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
     });
     print('incrementing counter');
-    initClient().then((client) {
+    /* initClient(context).then((client) {
       final createReviewReq = GSignUpReq(
         (b) => b
           ..vars.input.email = '${generateRandomString(10)}@example.com'
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         print("inside listen");
         print(response.data?.signUp);
       });
-    });
+    }); */
   }
 
   @override
@@ -74,51 +74,27 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Main Screen'),
       ),
-      drawer: Drawer(
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  DrawerHeader(
-                    child: Text('Drawer Header'),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('Item 1'),
-                    onTap: () {
-                      // Navigate to the route for Item 1
-                      GoRouter.of(context).go('/item1');
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Item 2'),
-                    onTap: () {
-                      // Navigate to the route for Item 2
-                      GoRouter.of(context).go('/item2');
-                    },
-                  ),
-                ],
-              ),
+      drawer: DrawerMenu(),
+      body: Center(
+        child: ButtonBar(
+          alignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                context.read<AuthenticationCubit>().logOut();
+              },
+              child: const Text('Log Out'),
             ),
-            Container(
-              color: Colors.red, // Change this to your desired color
-              child: ListTile(
-                title: Text('Logout'),
-                onTap: () {
-                  // Log out the user
-                  context.read<AuthenticationCubit>().logOut();
-                },
-              ),
+            ElevatedButton(
+              onPressed: () {
+                
+              },
+              child: const Text('Increment Counter'),
             ),
           ],
-      ),
-      ),
-      body: Center(
-        child: Text('Main Screen'),
+        )
+        
+        
       ),
     );
   }

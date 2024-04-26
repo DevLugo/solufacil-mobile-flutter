@@ -43,6 +43,12 @@ import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.da
     show GSignInReq, GSignUpReq;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.var.gql.dart'
     show GSignInVars, GSignUpVars;
+import 'package:solufacil_mobile/graphql/queries/__generated__/route.data.gql.dart'
+    show GGetRoutesData, GGetRoutesData_getRoutes;
+import 'package:solufacil_mobile/graphql/queries/__generated__/route.req.gql.dart'
+    show GGetRoutesReq;
+import 'package:solufacil_mobile/graphql/queries/__generated__/route.var.gql.dart'
+    show GGetRoutesVars;
 
 part 'serializers.gql.g.dart';
 
@@ -61,6 +67,10 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GDecimal,
   GEmployeeWhereUniqueInput,
   GEmployeesTypes,
+  GGetRoutesData,
+  GGetRoutesData_getRoutes,
+  GGetRoutesReq,
+  GGetRoutesVars,
   GLoanByBorrowerWhereUniqueInput,
   GLoanCreateInput,
   GLoanState,

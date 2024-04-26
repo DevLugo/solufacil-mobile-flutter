@@ -19,6 +19,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GDecimal.serializer)
       ..add(GEmployeeWhereUniqueInput.serializer)
       ..add(GEmployeesTypes.serializer)
+      ..add(GGetRoutesData.serializer)
+      ..add(GGetRoutesData_getRoutes.serializer)
+      ..add(GGetRoutesReq.serializer)
+      ..add(GGetRoutesVars.serializer)
       ..add(GLoanByBorrowerWhereUniqueInput.serializer)
       ..add(GLoanCreateInput.serializer)
       ..add(GLoanState.serializer)
@@ -47,6 +51,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(
               BuiltList, const [const FullType(GCreateAddressInput)]),
           () => new ListBuilder<GCreateAddressInput>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(GGetRoutesData_getRoutes)]),
+          () => new ListBuilder<GGetRoutesData_getRoutes>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GPaymentState)]),
           () => new ListBuilder<GPaymentState>()))

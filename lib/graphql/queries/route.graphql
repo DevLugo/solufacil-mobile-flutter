@@ -1,0 +1,8 @@
+query GetRoutes(
+	$where: RouteWhereInput!
+){
+  getRoutes(where:$where){
+    id
+    name
+  }
+}
