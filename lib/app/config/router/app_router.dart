@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/screens/auth/signin_screen.dart';
 import 'package:solufacil_mobile/app/presentation/screens/home/home_screen.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/lead_resume_screen.dart';
+import 'package:solufacil_mobile/app/presentation/screens/locality/localities_screen.dart';
 
 final appRouter = GoRouter(
   routes: [
@@ -23,15 +25,15 @@ final appRouter = GoRouter(
       //builder: (context, state) => const MyHomePage(title: "My Titleee",),
     ),
 
-    /* GoRoute(
-      path: '/simple-cubit',
-      builder: (context, state) => const CubitScreen(),
-    ),
-
     GoRoute(
-      path: '/cubit-router',
-      builder: (context, state) => const RouterScreen(),
+      path: '/localities',
+      builder: (context, state) => LocalitiesScreen(),
     ),
+    GoRoute(
+      path: '/lead_resume',
+      builder: (context, state) => LeadResumeScreen(),
+    ),
+    /* 
 
     GoRoute(
       path: '/cubit-state',
@@ -51,8 +53,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/blocs-with-blocs',
       builder: (context, state) => const BlocsWithBlocsScreen(),
-    ),
- */
+    ), */
 
 
   ]);

@@ -47,32 +47,34 @@ class _DrawerMenuState extends State<DrawerMenu> {
                             ),
                           ),
                           SizedBox(height: 8),
-                          BlocBuilder<RouteCubit, List<GGetRoutesData_getRoutes>>(
-                            builder: (context, state) {
-                              return DropdownButton<String>(
-                                value: state.isNotEmpty ? state.first.id : null,                                onChanged: (newValue) {
-                                  /* context.read<RouteCubit>().s(newValue!); */
-                                  /* GoRouter.of(context).go(newValue); */
-                                },
-                                items: state.map((route) {
-                                  return DropdownMenuItem<String>(
-                                    value: route.id,
-                                    child: Text(route.name),
-                                  );
-                                }).toList(),
-                              );
-                            },
-                          ),
                         ],
                       ),
                     );
                   },
                 ),
                 ListTile(
-                  title: Text('Home'),
+                  title: Text('Resumen'),
                   onTap: () {
                     // Navigate to the route for Item 1
-                    GoRouter.of(context).go('/item1');
+                  },
+                ),
+                ListTile(
+                  title: Text('Localidades'),
+                  onTap: () {
+                    // Navigate to the route for Item 1
+                  },
+                ),
+                ListTile(
+                  title: Text('Balance'),
+                  onTap: () {
+                    // Navigate to the route for Item 1
+                  },
+                ),
+                ListTile(
+                  title: Text('Solicitar Dinero'),
+                  onTap: () {
+                    // Navigate to the route for Item 1
+                    GoRouter.of(context).go('/localities');
                   },
                 ),
               ],
