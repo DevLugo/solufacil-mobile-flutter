@@ -101,7 +101,7 @@ class LocalitiesScreenState extends State<LocalitiesScreen> {
       []; // Replace Locality with your actual model class
 
   String currentRoute = 'Route 1'; // Default route
-  
+
   handleGetLocalities() async {
     // Implement your logic to fetch the localities here
     // You can use an API call or any other method to retrieve the data
@@ -129,74 +129,78 @@ class LocalitiesScreenState extends State<LocalitiesScreen> {
             child: BlocBuilder<LocationCubit, LocationsState>(
               builder: (context, state) {
                 if (state.isLoading ?? false) {
-                    return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else {
                   final localities = state.locations;
                   if (localities != null) {
-                     if (localities.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'Sin resultados status: ${state.locations?.length} also ${state.isLoading}',
-                        style: TextStyle(fontSize: 24, color: Colors.grey[700]),
-                      ),
-                    );
-                  } else {
-                    return ListView.builder(
-                      itemCount: localities.length,
-                      itemBuilder: (context, index) {
-                        final locality = localities[index];
-                        if (locality == null) {
-                          return const SizedBox.shrink();
-                        }
-                        // build your list item with locality
-                        // assuming you have a widget called LocalityItem
-                        return ExpansionTile(
-                          title: RichText(
-                            text: TextSpan(
-                              style: DefaultTextStyle.of(context).style,
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: locality.name,
-                                  style: const TextStyle(
-                                    fontSize: 20, // Larger font size
-                                    color: Colors
-                                        .black87, // Dark color for important text
+                    if (localities.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Sin resultados status: ${state.locations?.length} also ${state.isLoading}',
+                          style:
+                              TextStyle(fontSize: 24, color: Colors.grey[700]),
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: localities.length,
+                        itemBuilder: (context, index) {
+                          final locality = localities[index];
+                          if (locality == null) {
+                            return const SizedBox.shrink();
+                          }
+                          // build your list item with locality
+                          // assuming you have a widget called LocalityItem
+                          return ExpansionTile(
+                            title: RichText(
+                              text: TextSpan(
+                                style: DefaultTextStyle.of(context).style,
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: ' ${locality.name} ',
+                                    style: const TextStyle(
+                                      fontSize: 18, // Larger font size
+                                      color: Colors
+                                          .black87, // Dark color for important text
+                                    ),
                                   ),
-                                ),
-                                TextSpan(
-                                  text: locality.municipality.name,
-                                  style: TextStyle(
-                                    fontSize: 16, // Medium font size
-                                    color: Colors.grey[700], // Dark grey color
+                                  TextSpan(
+                                    text: ' ${locality.municipality.name}, ',
+                                    style: TextStyle(
+                                      fontSize: 16, // Medium font size
+                                      color:
+                                          Colors.grey[700], // Dark grey color
+                                    ),
                                   ),
-                                ),
-                                TextSpan(
-                                    text: '${locality.state?.name}',
-                                  style: TextStyle(
-                                    fontSize: 14, // Smaller font size
-                                    color: Colors.grey[700], // Dark grey color
+                                  TextSpan(
+                                    text: ' ${locality.state?.name} ',
+                                    style: TextStyle(
+                                      fontSize: 14, // Smaller font size
+                                      color:
+                                          Colors.grey[700], // Dark grey color
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          children: <Widget>[
-                            for (final lead in locality.leads)
-                              InkWell(
-                                onTap: () {
-                                  // Implement your onTap logic here
-                                  GoRouter.of(context).go('/lead_resume/${lead.id}');
-                                },
-                                child: ListTile(
-                                  title: Text(lead.personalData.fullName),
-                                ),
+                                ],
                               ),
-                            // Add more details about the locality here
-                          ],
-                        );
-                      },
-                    );
-                  }
+                            ),
+                            children: <Widget>[
+                              for (final lead in locality.leads)
+                                InkWell(
+                                  onTap: () {
+                                    // Implement your onTap logic here
+                                    GoRouter.of(context)
+                                        .go('/lead_resume/${lead.id}');
+                                  },
+                                  child: ListTile(
+                                    title: Text(lead.personalData.fullName),
+                                  ),
+                                ),
+                              // Add more details about the locality here
+                            ],
+                          );
+                        },
+                      );
+                    }
                   } else {
                     return const Text('Something went wrong!');
                   }
