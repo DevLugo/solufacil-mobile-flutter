@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/screens/shared/drawer_menu/drawer_menu.dart';
-import 'package:solufacil_mobile/data/remote/client.dart';
-import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.dart';
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solufacil_mobile/graphql/queries/__generated__/route.req.gql.dart';
 
 
 String generateRandomString(int length) {
@@ -37,31 +33,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-    });
-    print('incrementing counter');
-    /* initClient(context).then((client) {
-      final createReviewReq = GSignUpReq(
-        (b) => b
-          ..vars.input.email = '${generateRandomString(10)}@example.com'
-          ..vars.input.password = 'password'
-          ..vars.input.firstName = 'John'
-          ..vars.input.lastName = 'Doe'
-      );
-      print("requesting");
-      client.request(createReviewReq).listen((response) {
-        print("inside listen");
-        print(response.data?.signUp);
-      });
-    }); */
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -72,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main Screen'),
+        title: const Text('Main Screen'),
       ),
       drawer: DrawerMenu(),
       body: Center(

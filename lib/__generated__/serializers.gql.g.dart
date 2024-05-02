@@ -27,6 +27,15 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GLoanCreateInput.serializer)
       ..add(GLoanState.serializer)
       ..add(GLoanTypeWhereInput.serializer)
+      ..add(GLocationWhereInput.serializer)
+      ..add(GLocationsData.serializer)
+      ..add(GLocationsData_locations.serializer)
+      ..add(GLocationsData_locations_leads.serializer)
+      ..add(GLocationsData_locations_leads_personalData.serializer)
+      ..add(GLocationsData_locations_municipality.serializer)
+      ..add(GLocationsData_locations_state.serializer)
+      ..add(GLocationsReq.serializer)
+      ..add(GLocationsVars.serializer)
       ..add(GPayLoanPaymentInput.serializer)
       ..add(GPaymentScheduleWhereInput.serializer)
       ..add(GPaymentState.serializer)
@@ -55,6 +64,14 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(
               BuiltList, const [const FullType(GGetRoutesData_getRoutes)]),
           () => new ListBuilder<GGetRoutesData_getRoutes>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(GLocationsData_locations)]),
+          () => new ListBuilder<GLocationsData_locations>())
+      ..addBuilderFactory(
+          const FullType(BuiltList,
+              const [const FullType(GLocationsData_locations_leads)]),
+          () => new ListBuilder<GLocationsData_locations_leads>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GPaymentState)]),
           () => new ListBuilder<GPaymentState>()))

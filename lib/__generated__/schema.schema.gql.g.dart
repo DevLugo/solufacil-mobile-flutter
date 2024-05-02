@@ -113,6 +113,8 @@ Serializer<GLoanCreateInput> _$gLoanCreateInputSerializer =
 Serializer<GLoanState> _$gLoanStateSerializer = new _$GLoanStateSerializer();
 Serializer<GLoanTypeWhereInput> _$gLoanTypeWhereInputSerializer =
     new _$GLoanTypeWhereInputSerializer();
+Serializer<GLocationWhereInput> _$gLocationWhereInputSerializer =
+    new _$GLocationWhereInputSerializer();
 Serializer<GPayLoanPaymentInput> _$gPayLoanPaymentInputSerializer =
     new _$GPayLoanPaymentInputSerializer();
 Serializer<GPaymentScheduleWhereInput> _$gPaymentScheduleWhereInputSerializer =
@@ -768,6 +770,63 @@ class _$GLoanTypeWhereInputSerializer
           result.employeeType = serializers.deserialize(value,
                   specifiedType: const FullType(GEmployeesTypes))
               as GEmployeesTypes?;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$GLocationWhereInputSerializer
+    implements StructuredSerializer<GLocationWhereInput> {
+  @override
+  final Iterable<Type> types = const [
+    GLocationWhereInput,
+    _$GLocationWhereInput
+  ];
+  @override
+  final String wireName = 'GLocationWhereInput';
+
+  @override
+  Iterable<Object?> serialize(
+      Serializers serializers, GLocationWhereInput object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object?>[
+      'routeId',
+      serializers.serialize(object.routeId,
+          specifiedType: const FullType(String)),
+    ];
+    Object? value;
+    value = object.name;
+    if (value != null) {
+      result
+        ..add('name')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
+    return result;
+  }
+
+  @override
+  GLocationWhereInput deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new GLocationWhereInputBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current! as String;
+      iterator.moveNext();
+      final Object? value = iterator.current;
+      switch (key) {
+        case 'routeId':
+          result.routeId = serializers.deserialize(value,
+              specifiedType: const FullType(String))! as String;
+          break;
+        case 'name':
+          result.name = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -2481,6 +2540,105 @@ class GLoanTypeWhereInputBuilder
   _$GLoanTypeWhereInput _build() {
     final _$result =
         _$v ?? new _$GLoanTypeWhereInput._(employeeType: employeeType);
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$GLocationWhereInput extends GLocationWhereInput {
+  @override
+  final String routeId;
+  @override
+  final String? name;
+
+  factory _$GLocationWhereInput(
+          [void Function(GLocationWhereInputBuilder)? updates]) =>
+      (new GLocationWhereInputBuilder()..update(updates))._build();
+
+  _$GLocationWhereInput._({required this.routeId, this.name}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        routeId, r'GLocationWhereInput', 'routeId');
+  }
+
+  @override
+  GLocationWhereInput rebuild(
+          void Function(GLocationWhereInputBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  GLocationWhereInputBuilder toBuilder() =>
+      new GLocationWhereInputBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is GLocationWhereInput &&
+        routeId == other.routeId &&
+        name == other.name;
+  }
+
+  @override
+  int get hashCode {
+    var _$hash = 0;
+    _$hash = $jc(_$hash, routeId.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper(r'GLocationWhereInput')
+          ..add('routeId', routeId)
+          ..add('name', name))
+        .toString();
+  }
+}
+
+class GLocationWhereInputBuilder
+    implements Builder<GLocationWhereInput, GLocationWhereInputBuilder> {
+  _$GLocationWhereInput? _$v;
+
+  String? _routeId;
+  String? get routeId => _$this._routeId;
+  set routeId(String? routeId) => _$this._routeId = routeId;
+
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
+
+  GLocationWhereInputBuilder();
+
+  GLocationWhereInputBuilder get _$this {
+    final $v = _$v;
+    if ($v != null) {
+      _routeId = $v.routeId;
+      _name = $v.name;
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(GLocationWhereInput other) {
+    ArgumentError.checkNotNull(other, 'other');
+    _$v = other as _$GLocationWhereInput;
+  }
+
+  @override
+  void update(void Function(GLocationWhereInputBuilder)? updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  GLocationWhereInput build() => _build();
+
+  _$GLocationWhereInput _build() {
+    final _$result = _$v ??
+        new _$GLocationWhereInput._(
+            routeId: BuiltValueNullFieldError.checkNotNull(
+                routeId, r'GLocationWhereInput', 'routeId'),
+            name: name);
     replace(_$result);
     return _$result;
   }

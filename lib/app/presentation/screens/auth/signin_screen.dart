@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:solufacil_mobile/app/presentation/blocs/route_cubit/route_cubit.dart';
-import 'package:solufacil_mobile/data/remote/client.dart';
-import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.ast.gql.dart';
-import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.dart';
 
 class SignInScreen extends StatelessWidget {
   final String? title;
@@ -18,10 +14,6 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
-        title: Text('Token: ${title}'),
-      ),    
-  
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -37,7 +29,7 @@ class SignInScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(20),
@@ -52,7 +44,7 @@ class SignInScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(20),
@@ -79,15 +71,15 @@ class SignInScreen extends StatelessWidget {
                               passwordController.text,
                             );
                           },
-                    child: state.isSubmitting
-                        ? CircularProgressIndicator()
-                        : Text('Acceder'),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
                     ),
+                    child: state.isSubmitting
+                      ? const CircularProgressIndicator()
+                      : const Text('Acceder'),
                   );
                 },
               )

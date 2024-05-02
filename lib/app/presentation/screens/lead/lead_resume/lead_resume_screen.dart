@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/granted_loans.dart';
 import 'package:solufacil_mobile/app/presentation/screens/shared/drawer_menu/drawer_menu.dart';
 
 class LeadResumeScreen extends StatefulWidget {
+  final String leadId;
+  
+  LeadResumeScreen({required this.leadId});
   @override
   _LeadResumeScreenState createState() => _LeadResumeScreenState();
 }
@@ -70,7 +74,14 @@ class _LeadResumeScreenState extends State<LeadResumeScreen>
         children: [
           // Replace with your actual widgets
           Container(),
-          Container(),
+          GrantedLoansScreen(loans: List<Loan>.generate(
+        10,
+        (index) => Loan(
+          fullName: 'Person $index',
+          amount: (index + 1) * 1000.0,
+          isNew: index % 2 == 0,
+        ),
+      ),),
           Container(),
           Container(),
         ],

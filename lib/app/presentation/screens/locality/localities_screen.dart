@@ -1,18 +1,20 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solufacil_mobile/app/presentation/blocs/location_cubit/location_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/screens/shared/drawer_menu/drawer_menu.dart';
 
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
+  const MyAppBar({super.key});
+
   @override
-  _MyAppBarState createState() => _MyAppBarState();
+  MyAppBarState createState() => MyAppBarState();
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
-class _MyAppBarState extends State<MyAppBar> {
+class MyAppBarState extends State<MyAppBar> {
   bool _isSearching = false;
   final _searchController = TextEditingController();
 
@@ -40,17 +42,11 @@ class _MyAppBarState extends State<MyAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      /* leading: IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          //Navigator.pop(context);
-        },
-      ), */
       title: AnimatedCrossFade(
-        firstChild: Text('Localidades'),
+        firstChild: const Text('Localidades'),
         secondChild: TextField(
           controller: _searchController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Search',
             border: InputBorder.none,
           ),
@@ -60,7 +56,7 @@ class _MyAppBarState extends State<MyAppBar> {
         ),
         crossFadeState:
             _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
       ),
       actions: [
         IconButton(
@@ -75,10 +71,10 @@ class _MyAppBarState extends State<MyAppBar> {
           },
         ),
         TextButton.icon(
-          icon: Icon(Icons.map), // or Icons.directions
+          icon: const Icon(Icons.map), // or Icons.directions
           label: Text(
             currentRoute,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.blue, // Bright color
               fontWeight: FontWeight.bold, // Bold font weight
             ),
@@ -94,105 +90,120 @@ class _MyAppBarState extends State<MyAppBar> {
 }
 
 class LocalitiesScreen extends StatefulWidget {
+  const LocalitiesScreen({super.key});
+
   @override
-  _LocalitiesScreenState createState() => _LocalitiesScreenState();
+  LocalitiesScreenState createState() => LocalitiesScreenState();
 }
 
-class _LocalitiesScreenState extends State<LocalitiesScreen> {
+class LocalitiesScreenState extends State<LocalitiesScreen> {
   List<Locality> localities =
       []; // Replace Locality with your actual model class
-  final _random = Random();
 
   String currentRoute = 'Route 1'; // Default route
-  final _firstNames = ['John', 'Jane', 'Robert', 'Emma', 'Michael', 'Emily'];
-  final _lastNames = [
-    'Smith',
-    'Johnson',
-    'Williams',
-    'Brown',
-    'Jones',
-    'Miller'
-  ];
-  String _generateRandomName() {
-    final firstName = _firstNames[_random.nextInt(_firstNames.length)];
-    final lastName = _lastNames[_random.nextInt(_lastNames.length)];
-    return '$firstName $lastName';
+  
+  handleGetLocalities() async {
+    // Implement your logic to fetch the localities here
+    // You can use an API call or any other method to retrieve the data
+    // Once you have the data, update the localities list using setState
+    // Example:
+    final locationCubit = context.read<LocationCubit>();
+    await locationCubit.fetchLocations(context, "", "1");
   }
 
   @override
   void initState() {
     super.initState();
     // Call the getLocalities method here to fetch the localities
-    localities = List<Locality>.generate(
-        35,
-        (index) => Locality(
-              name: 'Locality ${index + 1}',
-              state: 'State ${index + 1}',
-              municipalityName: 'Municipality ${index + 1}',
-              leads: List<Lead>.generate(
-                  3, (index) => Lead(name: _generateRandomName())),
-            ));
+    handleGetLocalities();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(),
+      appBar: const MyAppBar(),
       drawer: DrawerMenu(),
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemCount: localities.length,
-              itemBuilder: (context, index) {
-                final locality = localities[index];
-                return ExpansionTile(
-                  title: RichText(
-                    text: TextSpan(
-                      style: DefaultTextStyle.of(context).style,
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: locality.name,
-                          style: TextStyle(
-                            fontSize: 20, // Larger font size
-                            color:
-                                Colors.black87, // Dark color for important text
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' ${locality.municipalityName}',
-                          style: TextStyle(
-                            fontSize: 16, // Medium font size
-                            color: Colors.grey[700], // Dark grey color
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' ${locality.state}',
-                          style: TextStyle(
-                            fontSize: 14, // Smaller font size
-                            color: Colors.grey[700], // Dark grey color
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  children: <Widget>[
-                    for (final lead in locality.leads)
-                      InkWell(
-                        onTap: () {
-                          // Implement your onTap logic here
-                          GoRouter.of(context).go('/lead_resume');
-                        },
-                        child: ListTile(
-                          title: Text(lead.name),
-                        ),
+            child: BlocBuilder<LocationCubit, LocationsState>(
+              builder: (context, state) {
+                if (state.isLoading ?? false) {
+                    return const Center(child: CircularProgressIndicator());
+                } else {
+                  final localities = state.locations;
+                  if (localities != null) {
+                     if (localities.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'Sin resultados status: ${state.locations?.length} also ${state.isLoading}',
+                        style: TextStyle(fontSize: 24, color: Colors.grey[700]),
                       ),
-                    // Add more details about the locality here
-                  ],
-                );
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: localities.length,
+                      itemBuilder: (context, index) {
+                        final locality = localities[index];
+                        if (locality == null) {
+                          return const SizedBox.shrink();
+                        }
+                        // build your list item with locality
+                        // assuming you have a widget called LocalityItem
+                        return ExpansionTile(
+                          title: RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: locality.name,
+                                  style: const TextStyle(
+                                    fontSize: 20, // Larger font size
+                                    color: Colors
+                                        .black87, // Dark color for important text
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: locality.municipality.name,
+                                  style: TextStyle(
+                                    fontSize: 16, // Medium font size
+                                    color: Colors.grey[700], // Dark grey color
+                                  ),
+                                ),
+                                TextSpan(
+                                    text: '${locality.state?.name}',
+                                  style: TextStyle(
+                                    fontSize: 14, // Smaller font size
+                                    color: Colors.grey[700], // Dark grey color
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          children: <Widget>[
+                            for (final lead in locality.leads)
+                              InkWell(
+                                onTap: () {
+                                  // Implement your onTap logic here
+                                  GoRouter.of(context).go('/lead_resume/${lead.id}');
+                                },
+                                child: ListTile(
+                                  title: Text(lead.personalData.fullName),
+                                ),
+                              ),
+                            // Add more details about the locality here
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  } else {
+                    return const Text('Something went wrong!');
+                  }
+                }
               },
             ),
-          ),
+          )
         ],
       ),
     );

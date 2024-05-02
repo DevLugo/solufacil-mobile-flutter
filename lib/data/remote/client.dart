@@ -8,7 +8,6 @@ import 'package:solufacil_mobile/__generated__/schema.schema.gql.dart';
 // *** If using flutter ***
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:gql_link/gql_link.dart';
 import 'package:gql_exec/gql_exec.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
 
@@ -45,9 +44,9 @@ Future<Client> initClient(BuildContext context) async {
 
   final cache = Cache(store: store, possibleTypes: possibleTypesMap);
 
-  //final link = HttpLink('https://solufacil-graphql.onrender.com/graphql');
+  final httpLink = HttpLink('https://solufacil-graphql.onrender.com/graphql');
   //final httpLink = HttpLink('http://192.168.0.232:4000/graphql');
-  final httpLink = HttpLink('http://127.0.0.1:4000/graphql');
+  //final httpLink = HttpLink('http://127.0.0.1:4000/graphql');
 
   
   final authLink = AuthLink(

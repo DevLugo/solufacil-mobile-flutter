@@ -348,6 +348,31 @@ abstract class GLoanTypeWhereInput
       );
 }
 
+abstract class GLocationWhereInput
+    implements Built<GLocationWhereInput, GLocationWhereInputBuilder> {
+  GLocationWhereInput._();
+
+  factory GLocationWhereInput(
+          [void Function(GLocationWhereInputBuilder b) updates]) =
+      _$GLocationWhereInput;
+
+  String get routeId;
+  String? get name;
+  static Serializer<GLocationWhereInput> get serializer =>
+      _$gLocationWhereInputSerializer;
+
+  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
+        GLocationWhereInput.serializer,
+        this,
+      ) as Map<String, dynamic>);
+
+  static GLocationWhereInput? fromJson(Map<String, dynamic> json) =>
+      _i1.serializers.deserializeWith(
+        GLocationWhereInput.serializer,
+        json,
+      );
+}
+
 abstract class GPayLoanPaymentInput
     implements Built<GPayLoanPaymentInput, GPayLoanPaymentInputBuilder> {
   GPayLoanPaymentInput._();

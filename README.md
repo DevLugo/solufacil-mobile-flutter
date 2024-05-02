@@ -17,4 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 get-graphql-schema https://solufacil-graphql.onrender.com/graphql > lib/schema.graphql
 
+get-graphql-schema http://localhost:4000/graphql > lib/schema.graphql
+
 flutter pub run build_runner build

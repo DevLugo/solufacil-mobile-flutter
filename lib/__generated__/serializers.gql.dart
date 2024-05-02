@@ -24,6 +24,7 @@ import 'package:solufacil_mobile/__generated__/schema.schema.gql.dart'
         GLoanCreateInput,
         GLoanState,
         GLoanTypeWhereInput,
+        GLocationWhereInput,
         GPayLoanPaymentInput,
         GPaymentScheduleWhereInput,
         GPaymentState,
@@ -43,6 +44,18 @@ import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.da
     show GSignInReq, GSignUpReq;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.var.gql.dart'
     show GSignInVars, GSignUpVars;
+import 'package:solufacil_mobile/graphql/queries/__generated__/locality.data.gql.dart'
+    show
+        GLocationsData,
+        GLocationsData_locations,
+        GLocationsData_locations_leads,
+        GLocationsData_locations_leads_personalData,
+        GLocationsData_locations_municipality,
+        GLocationsData_locations_state;
+import 'package:solufacil_mobile/graphql/queries/__generated__/locality.req.gql.dart'
+    show GLocationsReq;
+import 'package:solufacil_mobile/graphql/queries/__generated__/locality.var.gql.dart'
+    show GLocationsVars;
 import 'package:solufacil_mobile/graphql/queries/__generated__/route.data.gql.dart'
     show GGetRoutesData, GGetRoutesData_getRoutes;
 import 'package:solufacil_mobile/graphql/queries/__generated__/route.req.gql.dart'
@@ -75,6 +88,15 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GLoanCreateInput,
   GLoanState,
   GLoanTypeWhereInput,
+  GLocationWhereInput,
+  GLocationsData,
+  GLocationsData_locations,
+  GLocationsData_locations_leads,
+  GLocationsData_locations_leads_personalData,
+  GLocationsData_locations_municipality,
+  GLocationsData_locations_state,
+  GLocationsReq,
+  GLocationsVars,
   GPayLoanPaymentInput,
   GPaymentScheduleWhereInput,
   GPaymentState,

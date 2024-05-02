@@ -1,0 +1,23 @@
+query Locations(
+	$where: LocationWhereInput!
+){
+  locations(where:$where){
+    id
+    name
+    municipality{
+      id
+      name
+    }
+    state {
+      id
+      name
+    }
+    leads {
+      id
+      personalData{
+        id
+        fullName
+      }
+    }
+  }
+}

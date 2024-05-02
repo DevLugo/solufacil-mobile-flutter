@@ -206,7 +206,12 @@ type Location {
   stateId: ID!
   leads: [Employee!]!
   municipality: Municipality!
-  state: State!
+  state: State
+}
+
+input LocationWhereInput {
+  routeId: ID!
+  name: String
 }
 
 type Municipality {
@@ -217,6 +222,7 @@ type Municipality {
 
 type Mutation {
   payPayment(input: PayLoanPaymentInput!): Loan!
+  createLoan(input: LoanCreateInput!): Loan!
   createLoanBulk(input: [LoanCreateInput!]!): [Loan!]!
   signUp(input: UserCreateInput!): User!
   signIn(input: SignInInput!): SignInOutput!
@@ -282,6 +288,7 @@ type Query {
   hello: String!
   getLoanByBorrower(where: LoanByBorrowerWhereUniqueInput!): Loan!
   getRoutes(where: RouteWhereInput!): [Route!]!
+  locations(where: LocationWhereInput!): [Location!]!
   getEmployee(where: EmployeeWhereUniqueInput!): Employee!
   getBorrower(where: BorrowerWhereUniqueInput!): Borrower!
   getBorrowers(where: BorrowerWhereInput): [Borrower!]!

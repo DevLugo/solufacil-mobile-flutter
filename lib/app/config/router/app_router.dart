@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
@@ -30,8 +31,14 @@ final appRouter = GoRouter(
       builder: (context, state) => LocalitiesScreen(),
     ),
     GoRoute(
-      path: '/lead_resume',
-      builder: (context, state) => LeadResumeScreen(),
+      path: '/lead_resume/:leadId',
+      pageBuilder: (context, state) {
+      final leadId = state.pathParameters['leadId'] ?? ''; // Get the leadId from the path
+        return MaterialPage<void>(
+          key: state.pageKey,
+          child: LeadResumeScreen(leadId: leadId),
+        );
+      },
     ),
     /* 
 

@@ -3,18 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solufacil_mobile/app/config/config.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
+import 'package:solufacil_mobile/app/presentation/blocs/location_cubit/location_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/route_cubit/route_cubit.dart';
-import 'package:solufacil_mobile/app/presentation/screens/home/home_screen.dart';
 import 'package:solufacil_mobile/data/remote/client.dart';
-import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.ast.gql.dart';
-import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final _appRouter = appRouter;
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,7 @@ class MyApp extends StatelessWidget {
           }
           final client = snapshot.data;
           if (client == null) {
-            return MaterialApp(home: Scaffold(body: Center(child: Text('Client is null'))));
+            return const MaterialApp(home: Scaffold(body: Center(child: Text('Client is null'))));
           }
           return MultiBlocProvider(
             providers: [
@@ -37,6 +35,9 @@ class MyApp extends StatelessWidget {
               BlocProvider<RouteCubit>(
                 create: (context) => RouteCubit(),
               ),
+              BlocProvider<LocationCubit>(
+                create: (context) => LocationCubit(),
+              ),
             ],
             child: MaterialApp.router(
               debugShowCheckedModeBanner: false,
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
             ),
           );
         } else {
-          return MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator())));
+          return const MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator())));
         }
       },
     );
