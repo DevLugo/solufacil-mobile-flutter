@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:powersync_flutter_demo/models/personal_data_model.dart';
-import 'package:powersync_flutter_demo/models/phone_model.dart';
 /* import 'package:mobile_scanner/mobile_scanner.dart'; */
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:powersync_flutter_demo/widgets/common/image_cropper_page.dart';
-import 'package:powersync_flutter_demo/widgets/forms/createLoanForm/extractText.dart';
-import 'package:powersync_flutter_demo/widgets/forms/createLoanForm/index.dart';
 import 'dart:math';
+
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/extractText.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/index.dart';
+import 'package:solufacil_mobile/app/widgets/common/image_cropper_page.dart';
 
 /* class StepOneContent extends StatelessWidget { */
 class PersonalDataForm extends StatefulWidget {

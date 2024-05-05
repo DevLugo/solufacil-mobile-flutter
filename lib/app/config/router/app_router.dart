@@ -7,40 +7,43 @@ import 'package:solufacil_mobile/app/presentation/screens/home/home_screen.dart'
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/lead_resume_screen.dart';
 import 'package:solufacil_mobile/app/presentation/screens/locality/localities_screen.dart';
 
-final appRouter = GoRouter(
-  routes: [
+final appRouter = GoRouter(routes: [
+  GoRoute(
+    path: '/',
+    builder: (context, state) {
+      return BlocBuilder<AuthenticationCubit, AuthenticationState>(
+        builder: (context, state) {
+          if (state.status == AuthenticationStatus.authenticated) {
+            return MyHomePage(
+                title: AuthenticationStatus.authenticated.toString());
+          } else {
+            return SignInScreen(title: state.fullName);
+          }
+        },
+      );
+    },
 
-    GoRoute(
-      path: '/',
-      builder: (context, state) {
-        return BlocBuilder<AuthenticationCubit, AuthenticationState>(
-          builder: (context, state) {
-            if (state.status == AuthenticationStatus.authenticated) {
-              return MyHomePage(title: AuthenticationStatus.authenticated.toString());
-            } else {
-              return SignInScreen(title: state.fullName);
-            }
-          },
-        );
-      },
-      //builder: (context, state) => const MyHomePage(title: "My Titleee",),
-    ),
-
-    GoRoute(
+    //builder: (context, state) => const MyHomePage(title: "My Titleee",),
+  ),
+  GoRoute(
       path: '/localities',
       builder: (context, state) => LocalitiesScreen(),
+      routes: [
+        GoRoute(
+          path: 'lead_resume/:leadId',
+          pageBuilder: (context, state) {
+            final leadId = state.pathParameters['leadId'] ??
+                ''; // Get the leadId from the path
+            return MaterialPage<void>(
+              key: state.pageKey,
+              child: LeadResumeScreen(leadId: leadId),
+            );
+          },
+        )
+      ]
     ),
-    GoRoute(
-      path: '/lead_resume/:leadId',
-      pageBuilder: (context, state) {
-      final leadId = state.pathParameters['leadId'] ?? ''; // Get the leadId from the path
-        return MaterialPage<void>(
-          key: state.pageKey,
-          child: LeadResumeScreen(leadId: leadId),
-        );
-      },
-    ),
-    /* 
+
+  /* 
 
     GoRoute(
       path: '/cubit-state',
@@ -61,6 +64,4 @@ final appRouter = GoRouter(
       path: '/blocs-with-blocs',
       builder: (context, state) => const BlocsWithBlocsScreen(),
     ), */
-
-
-  ]);
+]);

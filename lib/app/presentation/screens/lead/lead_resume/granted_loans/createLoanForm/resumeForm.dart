@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:powersync_flutter_demo/widgets/forms/createLoanForm/index.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/index.dart';
 
 class LoanResumeForm extends StatelessWidget {
   final LoanFormState loanFormState;

@@ -38,7 +38,7 @@ class _LeadResumeScreenState extends State<LeadResumeScreen>
               leadName,
               style: TextStyle(
                 fontSize: 20, // Larger font size
-                color: Colors.black, // White color
+                color: const Color.fromARGB(255, 81, 74, 74), // White color
               ),
             ),
             Text(

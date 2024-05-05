@@ -1,0 +1,19 @@
+query GetLoanTypes(
+	$where: LoanTypeWhereInput
+){
+  getLoanTypes(where:$where){
+    name
+    id
+    weekDuration
+    rate
+    overdueRate
+    initialAmount
+    maximunAmount
+    amountToIncrease
+    increaseEveryNLoans
+    amountToIncrease
+    availableFor
+    createdAt
+    updatedAt
+  }
+}

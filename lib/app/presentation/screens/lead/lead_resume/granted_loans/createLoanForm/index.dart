@@ -1,12 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:powersync_flutter_demo/models/loan_type.model.dart';
-import 'package:powersync_flutter_demo/services/loan.service.dart';
-import 'package:powersync_flutter_demo/widgets/forms/createLoanForm/loanConfForm.dart';
-import 'package:powersync_flutter_demo/widgets/forms/createLoanForm/personalDataForm.dart';
-import 'package:powersync_flutter_demo/widgets/forms/createLoanForm/resumeForm.dart';
-import 'package:powersync_flutter_demo/widgets/forms/loanLeadForm.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/loanConfForm.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/personalDataForm.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/resumeForm.dart';
 
 enum StepType { client, aval, loanConf }
 
@@ -114,7 +111,6 @@ class PersonalDataState {
 
 class LoanConfState {
   String? loanTypeId; // create a class for this
-  LoanTypeModel? loanType;
   double? requestedAmount;
   double? givedAmount;
 
@@ -138,7 +134,6 @@ class LoanConfState {
 
   LoanConfState({
     this.loanTypeId,
-    this.loanType,
     this.requestedAmount = 3000,
     this.givedAmount = 3000,
     this.signDate,
@@ -150,7 +145,6 @@ class LoanConfState {
   Map<String, dynamic> toJson() {
     return {
       'loanTypeId': loanTypeId,
-      'loanType': loanType,
       'requestedAmount': requestedAmount,
       'givedAmount': givedAmount,
       'endDate': endDate?.toIso8601String(),
@@ -163,7 +157,6 @@ class LoanConfState {
 
   Map<String, dynamic> toMap() {
     return {
-      'loanType': loanType,
       'requestedAmount': requestedAmount,
       'givedAmount': givedAmount,
       'endDate': endDate?.toIso8601String(),
@@ -288,7 +281,7 @@ class _LoanFormState extends State<LoanForm> {
         data?.loanTypeId = value;
         break;
       case 'loanType':
-        data?.loanType = value as LoanTypeModel;
+        //data?.loanType = value as LoanTypeModel;
         break;
       case 'requestedAmount':
         data?.requestedAmount = double.parse(value);
@@ -346,7 +339,7 @@ class _LoanFormState extends State<LoanForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nuevo prestamo'),
+        title: const Text('Nuevo prestamo'),
       ),
       body: Column(
         children: [
@@ -392,7 +385,7 @@ class _LoanFormState extends State<LoanForm> {
                                 (isValid) => isLoanConfFormValid = isValid);
                             if (isLoanConfFormValid){
                               try {
-                                LoanService().createLoan(formData);
+                                //LoanService().createLoan(formData);
                               } catch (e) {
                                 print(e);
                               }

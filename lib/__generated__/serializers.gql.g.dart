@@ -12,6 +12,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GBorrowerWhereInput.serializer)
       ..add(GBorrowerWhereUniqueInput.serializer)
       ..add(GCreateAddressInput.serializer)
+      ..add(GCreateLoanData.serializer)
+      ..add(GCreateLoanData_createLoan.serializer)
+      ..add(GCreateLoanReq.serializer)
+      ..add(GCreateLoanVars.serializer)
       ..add(GCreatePersonalDataInput.serializer)
       ..add(GCreatePhoneInput.serializer)
       ..add(GDate.serializer)
@@ -19,6 +23,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GDecimal.serializer)
       ..add(GEmployeeWhereUniqueInput.serializer)
       ..add(GEmployeesTypes.serializer)
+      ..add(GGetLoanTypesData.serializer)
+      ..add(GGetLoanTypesData_getLoanTypes.serializer)
+      ..add(GGetLoanTypesReq.serializer)
+      ..add(GGetLoanTypesVars.serializer)
       ..add(GGetRoutesData.serializer)
       ..add(GGetRoutesData_getRoutes.serializer)
       ..add(GGetRoutesReq.serializer)
@@ -54,12 +62,20 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GSignUpVars.serializer)
       ..add(GUserCreateInput.serializer)
       ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(GCreatePersonalDataInput)]),
+          () => new ListBuilder<GCreatePersonalDataInput>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GCreatePhoneInput)]),
           () => new ListBuilder<GCreatePhoneInput>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(GCreateAddressInput)]),
           () => new ListBuilder<GCreateAddressInput>())
+      ..addBuilderFactory(
+          const FullType(BuiltList,
+              const [const FullType(GGetLoanTypesData_getLoanTypes)]),
+          () => new ListBuilder<GGetLoanTypesData_getLoanTypes>())
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(GGetRoutesData_getRoutes)]),

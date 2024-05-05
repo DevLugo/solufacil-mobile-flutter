@@ -44,6 +44,18 @@ import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.req.gql.da
     show GSignInReq, GSignUpReq;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/auth.var.gql.dart'
     show GSignInVars, GSignUpVars;
+import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.data.gql.dart'
+    show GCreateLoanData, GCreateLoanData_createLoan;
+import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.req.gql.dart'
+    show GCreateLoanReq;
+import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.var.gql.dart'
+    show GCreateLoanVars;
+import 'package:solufacil_mobile/graphql/queries/__generated__/loan.data.gql.dart'
+    show GGetLoanTypesData, GGetLoanTypesData_getLoanTypes;
+import 'package:solufacil_mobile/graphql/queries/__generated__/loan.req.gql.dart'
+    show GGetLoanTypesReq;
+import 'package:solufacil_mobile/graphql/queries/__generated__/loan.var.gql.dart'
+    show GGetLoanTypesVars;
 import 'package:solufacil_mobile/graphql/queries/__generated__/locality.data.gql.dart'
     show
         GLocationsData,
@@ -73,6 +85,10 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GBorrowerWhereInput,
   GBorrowerWhereUniqueInput,
   GCreateAddressInput,
+  GCreateLoanData,
+  GCreateLoanData_createLoan,
+  GCreateLoanReq,
+  GCreateLoanVars,
   GCreatePersonalDataInput,
   GCreatePhoneInput,
   GDate,
@@ -80,6 +96,10 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GDecimal,
   GEmployeeWhereUniqueInput,
   GEmployeesTypes,
+  GGetLoanTypesData,
+  GGetLoanTypesData_getLoanTypes,
+  GGetLoanTypesReq,
+  GGetLoanTypesVars,
   GGetRoutesData,
   GGetRoutesData_getRoutes,
   GGetRoutesReq,

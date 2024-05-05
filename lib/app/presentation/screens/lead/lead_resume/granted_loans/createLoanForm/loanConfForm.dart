@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:powersync_flutter_demo/models/loan_type.model.dart';
-import 'package:powersync_flutter_demo/widgets/forms/createLoanForm/index.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/index.dart';
+import 'package:solufacil_mobile/graphql/queries/__generated__/loan.data.gql.dart';
 
 class LoanConfForm extends StatefulWidget {
   final Function(String, dynamic, [int?]) onUpdate;
@@ -23,7 +23,7 @@ class _LoanConfFormState extends State<LoanConfForm> {
   double? _previousLoanPendingAmount;
   DateTime? _loanEndDate;
   int? _loanWeeks; // New field for the number of weeks
-  LoanTypeModel? selectedLoanType;
+  GGetLoanTypesData? selectedLoanType;
   TextEditingController signDateController = TextEditingController();
   TextEditingController firstPaymentDateController = TextEditingController();
   
@@ -34,7 +34,7 @@ class _LoanConfFormState extends State<LoanConfForm> {
       child: Column(
         children: <Widget>[
           Text(widget.data.loanTypeId ?? 'No loan type selected'),
-          FutureBuilder<List<LoanTypeModel>>(
+          /* FutureBuilder<List<LoanTypeModel>>(
             future: LoanTypeModel.getAll(),
             builder: (BuildContext context,
                 AsyncSnapshot<List<LoanTypeModel>> snapshot) {
@@ -82,7 +82,7 @@ class _LoanConfFormState extends State<LoanConfForm> {
            // Show an error message if no loan type is selected when the form is submitted
           if (widget.data.loanType == null && _formKey.currentState?.validate() == true)
             Text('Modalidad de Prestamo es requerido', style: TextStyle(color: Colors.red)),
-          TextFormField(
+           */TextFormField(
             decoration: InputDecoration(
               labelText: 'Cantidad Solicitada',
             ),
@@ -154,8 +154,8 @@ class _LoanConfFormState extends State<LoanConfForm> {
                   DateFormat('yyyy-MM-dd').format(date);
                 firstPaymentDateController.text = formattedDate;
                 widget.onUpdate('firstPaymentDate', date.toIso8601String());
-                DateTime endDate = date.add(Duration(days: (widget.data.loanType?.weekDuration ?? 0) * 7));
-                widget.onUpdate('endDate', endDate.toIso8601String());
+                /* DateTime endDate = date.add(Duration(days: (widget.data.loanType?.weekDuration ?? 0) * 7));
+                widget.onUpdate('endDate', endDate.toIso8601String()); */
 
               }
             },
@@ -170,13 +170,13 @@ class _LoanConfFormState extends State<LoanConfForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text('Resumen de prestamo', style: TextStyle(fontSize: 20)),
-                  Text('Loan %: ${widget.data.loanType?.name}'), // Replace with actual calculation
+                  /* Text('Loan %: ${widget.data.loanType?.name}'), // Replace with actual calculation */
                   Text('Cantidad Solicitada: \$${widget.data.requestedAmount}'),
                   Text('Cantidad Otorgada: ---TODO---:\$${widget.data.requestedAmount}'),
                   Text('Deuda Actual: ---TODO---: 0'),
                   Text('Fecha Termino: ${widget.data.endDate}'),
-                  Text('No Semanas: ${widget.data.loanType?.weekDuration}'),
-                  Text('Porcentaje total: ${widget.data.loanType?.rate}'),
+                  /* Text('No Semanas: ${widget.data.loanType?.weekDuration}'),
+                  Text('Porcentaje total: ${widget.data.loanType?.rate}'), */
                 ],
               ),
             ),

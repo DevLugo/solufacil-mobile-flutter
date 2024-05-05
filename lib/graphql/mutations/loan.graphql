@@ -1,0 +1,21 @@
+mutation CreateLoan(
+    $input: LoanCreateInput!
+){
+  createLoan(
+    input:$input
+  ){
+    id
+    status
+    weeklyPaymentAmount
+    previousAmountGived
+    amountGived
+    amountToPay
+    paidAmount
+    pendingAmount
+    renovatedFromId
+    renovationProfitAmount
+    renovationPendingAmount
+    baseProfitAmount
+    totalProfitAmount
+  }
+}

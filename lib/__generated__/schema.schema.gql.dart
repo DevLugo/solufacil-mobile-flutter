@@ -283,6 +283,7 @@ abstract class GLoanCreateInput
   bool get isRenovation;
   String? get borrowerId;
   GBorrowerCreateInput? get borrower;
+  BuiltList<GCreatePersonalDataInput>? get avals;
   String get loanLeadId;
   GDecimal get amountGived;
   String get loanTypeId;

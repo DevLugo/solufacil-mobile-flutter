@@ -649,6 +649,14 @@ class _$GLoanCreateInputSerializer
         ..add(serializers.serialize(value,
             specifiedType: const FullType(GBorrowerCreateInput)));
     }
+    value = object.avals;
+    if (value != null) {
+      result
+        ..add('avals')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(
+                BuiltList, const [const FullType(GCreatePersonalDataInput)])));
+    }
     value = object.signDate;
     if (value != null) {
       result
@@ -687,6 +695,12 @@ class _$GLoanCreateInputSerializer
           result.borrower.replace(serializers.deserialize(value,
                   specifiedType: const FullType(GBorrowerCreateInput))!
               as GBorrowerCreateInput);
+          break;
+        case 'avals':
+          result.avals.replace(serializers.deserialize(value,
+              specifiedType: const FullType(BuiltList, const [
+                const FullType(GCreatePersonalDataInput)
+              ]))! as BuiltList<Object?>);
           break;
         case 'loanLeadId':
           result.loanLeadId = serializers.deserialize(value,
@@ -2261,6 +2275,8 @@ class _$GLoanCreateInput extends GLoanCreateInput {
   @override
   final GBorrowerCreateInput? borrower;
   @override
+  final BuiltList<GCreatePersonalDataInput>? avals;
+  @override
   final String loanLeadId;
   @override
   final GDecimal amountGived;
@@ -2278,6 +2294,7 @@ class _$GLoanCreateInput extends GLoanCreateInput {
       required this.isRenovation,
       this.borrowerId,
       this.borrower,
+      this.avals,
       required this.loanLeadId,
       required this.amountGived,
       required this.loanTypeId,
@@ -2311,6 +2328,7 @@ class _$GLoanCreateInput extends GLoanCreateInput {
         isRenovation == other.isRenovation &&
         borrowerId == other.borrowerId &&
         borrower == other.borrower &&
+        avals == other.avals &&
         loanLeadId == other.loanLeadId &&
         amountGived == other.amountGived &&
         loanTypeId == other.loanTypeId &&
@@ -2324,6 +2342,7 @@ class _$GLoanCreateInput extends GLoanCreateInput {
     _$hash = $jc(_$hash, isRenovation.hashCode);
     _$hash = $jc(_$hash, borrowerId.hashCode);
     _$hash = $jc(_$hash, borrower.hashCode);
+    _$hash = $jc(_$hash, avals.hashCode);
     _$hash = $jc(_$hash, loanLeadId.hashCode);
     _$hash = $jc(_$hash, amountGived.hashCode);
     _$hash = $jc(_$hash, loanTypeId.hashCode);
@@ -2339,6 +2358,7 @@ class _$GLoanCreateInput extends GLoanCreateInput {
           ..add('isRenovation', isRenovation)
           ..add('borrowerId', borrowerId)
           ..add('borrower', borrower)
+          ..add('avals', avals)
           ..add('loanLeadId', loanLeadId)
           ..add('amountGived', amountGived)
           ..add('loanTypeId', loanTypeId)
@@ -2371,6 +2391,12 @@ class GLoanCreateInputBuilder
   set borrower(GBorrowerCreateInputBuilder? borrower) =>
       _$this._borrower = borrower;
 
+  ListBuilder<GCreatePersonalDataInput>? _avals;
+  ListBuilder<GCreatePersonalDataInput> get avals =>
+      _$this._avals ??= new ListBuilder<GCreatePersonalDataInput>();
+  set avals(ListBuilder<GCreatePersonalDataInput>? avals) =>
+      _$this._avals = avals;
+
   String? _loanLeadId;
   String? get loanLeadId => _$this._loanLeadId;
   set loanLeadId(String? loanLeadId) => _$this._loanLeadId = loanLeadId;
@@ -2398,6 +2424,7 @@ class GLoanCreateInputBuilder
       _isRenovation = $v.isRenovation;
       _borrowerId = $v.borrowerId;
       _borrower = $v.borrower?.toBuilder();
+      _avals = $v.avals?.toBuilder();
       _loanLeadId = $v.loanLeadId;
       _amountGived = $v.amountGived.toBuilder();
       _loanTypeId = $v.loanTypeId;
@@ -2431,6 +2458,7 @@ class GLoanCreateInputBuilder
                   isRenovation, r'GLoanCreateInput', 'isRenovation'),
               borrowerId: borrowerId,
               borrower: _borrower?.build(),
+              avals: _avals?.build(),
               loanLeadId: BuiltValueNullFieldError.checkNotNull(
                   loanLeadId, r'GLoanCreateInput', 'loanLeadId'),
               amountGived: amountGived.build(),
@@ -2445,6 +2473,8 @@ class GLoanCreateInputBuilder
 
         _$failedField = 'borrower';
         _borrower?.build();
+        _$failedField = 'avals';
+        _avals?.build();
 
         _$failedField = 'amountGived';
         amountGived.build();

@@ -150,6 +150,7 @@ input LoanCreateInput {
   isRenovation: Boolean!
   borrowerId: String
   borrower: BorrowerCreateInput
+  avals: [CreatePersonalDataInput!]
   loanLeadId: String!
   amountGived: Decimal!
   loanTypeId: String!

@@ -189,7 +189,7 @@ class LocalitiesScreenState extends State<LocalitiesScreen> {
                                   onTap: () {
                                     // Implement your onTap logic here
                                     GoRouter.of(context)
-                                        .go('/lead_resume/${lead.id}');
+                                        .go('/localities/lead_resume/${lead.id}');
                                   },
                                   child: ListTile(
                                     title: Text(lead.personalData.fullName),

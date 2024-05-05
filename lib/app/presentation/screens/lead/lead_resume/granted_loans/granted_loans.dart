@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/index.dart';
 
 class Loan {
   final String fullName;
@@ -93,6 +94,11 @@ class GrantedLoansScreen extends StatelessWidget {
           child: FloatingActionButton(
             onPressed: () {
               // Handle create/grant a new loan
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoanForm()),
+              );
+
             },
             backgroundColor: const Color(0xFF89CFF0),
             child: const Icon(Icons.add),
