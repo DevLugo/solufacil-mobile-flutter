@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/loanConfForm.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/personalDataForm.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/resumeForm.dart';
+import 'package:solufacil_mobile/graphql/queries/__generated__/loan.data.gql.dart';
 
 enum StepType { client, aval, loanConf }
 
@@ -113,11 +114,15 @@ class LoanConfState {
   String? loanTypeId; // create a class for this
   double? requestedAmount;
   double? givedAmount;
+  double? amountToPay;
+  //LoanTypeModel? loanType; // create a class for this
+  GGetLoanTypesData_getLoanTypes? loanType;
 
   DateTime? endDate;
   DateTime? signDate;
   DateTime? firstPaymentDate;
-
+  
+  double? weeklyPayment;
   double? previousLoanPendingAmount;
 
   static const attributes = [
@@ -130,6 +135,8 @@ class LoanConfState {
     'signDate',
     'firstPaymentDate',
     'previousLoanPendingAmount',
+    'weeklyPayment',
+    'amountToPay'
   ];
 
   LoanConfState({
@@ -140,6 +147,9 @@ class LoanConfState {
     this.endDate,
     this.firstPaymentDate,
     this.previousLoanPendingAmount,
+    this.loanType,
+    this.weeklyPayment,
+    this.amountToPay,
   });
 
   Map<String, dynamic> toJson() {
@@ -151,6 +161,9 @@ class LoanConfState {
       'signDate': signDate?.toIso8601String(),
       'firstPaymentDate': firstPaymentDate?.toIso8601String(),
       'previousLoanPendingAmount': previousLoanPendingAmount,
+      'loanType': loanType,
+      'weeklyPayment': weeklyPayment,
+      'amountToPay': amountToPay
       // Agrega los demás campos aquí...
     };
   }
@@ -163,6 +176,8 @@ class LoanConfState {
       'signDate': signDate?.toIso8601String(),
       'firstPaymentDate': firstPaymentDate?.toIso8601String(),
       'previousLoanPendingAmount': previousLoanPendingAmount,
+      'loanType': loanType,
+      'weeklyPayment': weeklyPayment,
 
       // Add other fields here
     };
@@ -281,7 +296,7 @@ class _LoanFormState extends State<LoanForm> {
         data?.loanTypeId = value;
         break;
       case 'loanType':
-        //data?.loanType = value as LoanTypeModel;
+        data?.loanType = value as GGetLoanTypesData_getLoanTypes?;
         break;
       case 'requestedAmount':
         data?.requestedAmount = double.parse(value);
@@ -303,6 +318,12 @@ class _LoanFormState extends State<LoanForm> {
         break;
       case 'previousLoanPendingAmount':
         data?.previousLoanPendingAmount = double.parse(value);
+        break;
+      case 'weeklyPayment':
+        data?.weeklyPayment = double.parse(value);
+        break;
+      case 'amountToPay':
+        data?.amountToPay = double.parse(value);
         break;
       // Add other fields here...
     }

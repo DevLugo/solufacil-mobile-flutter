@@ -1193,9 +1193,12 @@ const LoanType = _i1.ObjectTypeDefinitionNode(
       name: _i1.NameNode(value: 'availableFor'),
       directives: [],
       args: [],
-      type: _i1.NamedTypeNode(
-        name: _i1.NameNode(value: 'EmployeesTypes'),
-        isNonNull: true,
+      type: _i1.ListTypeNode(
+        type: _i1.NamedTypeNode(
+          name: _i1.NameNode(value: 'EmployeesTypes'),
+          isNonNull: true,
+        ),
+        isNonNull: false,
       ),
     ),
     _i1.FieldDefinitionNode(

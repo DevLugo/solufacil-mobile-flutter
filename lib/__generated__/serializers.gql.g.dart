@@ -73,6 +73,9 @@ Serializers _$serializers = (new Serializers().toBuilder()
               BuiltList, const [const FullType(GCreateAddressInput)]),
           () => new ListBuilder<GCreateAddressInput>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(GEmployeesTypes)]),
+          () => new ListBuilder<GEmployeesTypes>())
+      ..addBuilderFactory(
           const FullType(BuiltList,
               const [const FullType(GGetLoanTypesData_getLoanTypes)]),
           () => new ListBuilder<GGetLoanTypesData_getLoanTypes>())

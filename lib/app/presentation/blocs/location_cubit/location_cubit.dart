@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solufacil_mobile/data/remote/client.dart';
@@ -26,13 +28,13 @@ class LocationsState {
 
 class LocationCubit extends Cubit<LocationsState> {
   LocationCubit() : super(LocationsState(isLoading: false, locations: []));
+  StreamSubscription? _subscription;
 
   Future<void> fetchLocations(
     BuildContext context,
     String locationName,
     String routeId,
   ) async {
-
     initClient(context).then((client) {
       final fetchLocationsRq = GLocationsReq(
         (b) {
@@ -43,7 +45,7 @@ class LocationCubit extends Cubit<LocationsState> {
         },
       );
       emit(state.copyWith(isLoading: true));
-      client.request(fetchLocationsRq).listen((response) {
+      _subscription = client.request(fetchLocationsRq).listen((response) {
         if (response.data?.locations != null) {
           if (response.data?.locations != null) {
             emit(state.copyWith(
@@ -56,5 +58,11 @@ class LocationCubit extends Cubit<LocationsState> {
         ;
       });
     });
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    return super.close();
   }
 }

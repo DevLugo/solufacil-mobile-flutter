@@ -191,7 +191,7 @@ type LoanType {
   maximunAmount: Float!
   amountToIncrease: Float!
   increaseEveryNLoans: Int!
-  availableFor: EmployeesTypes!
+  availableFor: [EmployeesTypes!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }

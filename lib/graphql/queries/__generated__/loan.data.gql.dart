@@ -63,7 +63,7 @@ abstract class GGetLoanTypesData_getLoanTypes
   double get maximunAmount;
   double get amountToIncrease;
   int get increaseEveryNLoans;
-  _i2.GEmployeesTypes get availableFor;
+  BuiltList<_i2.GEmployeesTypes>? get availableFor;
   _i2.GDateTime get createdAt;
   _i2.GDateTime get updatedAt;
   static Serializer<GGetLoanTypesData_getLoanTypes> get serializer =>

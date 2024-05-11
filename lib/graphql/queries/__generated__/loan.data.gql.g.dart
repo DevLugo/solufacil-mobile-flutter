@@ -106,9 +106,6 @@ class _$GGetLoanTypesData_getLoanTypesSerializer
       'increaseEveryNLoans',
       serializers.serialize(object.increaseEveryNLoans,
           specifiedType: const FullType(int)),
-      'availableFor',
-      serializers.serialize(object.availableFor,
-          specifiedType: const FullType(_i2.GEmployeesTypes)),
       'createdAt',
       serializers.serialize(object.createdAt,
           specifiedType: const FullType(_i2.GDateTime)),
@@ -116,7 +113,15 @@ class _$GGetLoanTypesData_getLoanTypesSerializer
       serializers.serialize(object.updatedAt,
           specifiedType: const FullType(_i2.GDateTime)),
     ];
-
+    Object? value;
+    value = object.availableFor;
+    if (value != null) {
+      result
+        ..add('availableFor')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(
+                BuiltList, const [const FullType(_i2.GEmployeesTypes)])));
+    }
     return result;
   }
 
@@ -173,9 +178,10 @@ class _$GGetLoanTypesData_getLoanTypesSerializer
               specifiedType: const FullType(int))! as int;
           break;
         case 'availableFor':
-          result.availableFor = serializers.deserialize(value,
-                  specifiedType: const FullType(_i2.GEmployeesTypes))!
-              as _i2.GEmployeesTypes;
+          result.availableFor.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(_i2.GEmployeesTypes)]))!
+              as BuiltList<Object?>);
           break;
         case 'createdAt':
           result.createdAt.replace(serializers.deserialize(value,
@@ -333,7 +339,7 @@ class _$GGetLoanTypesData_getLoanTypes extends GGetLoanTypesData_getLoanTypes {
   @override
   final int increaseEveryNLoans;
   @override
-  final _i2.GEmployeesTypes availableFor;
+  final BuiltList<_i2.GEmployeesTypes>? availableFor;
   @override
   final _i2.GDateTime createdAt;
   @override
@@ -354,7 +360,7 @@ class _$GGetLoanTypesData_getLoanTypes extends GGetLoanTypesData_getLoanTypes {
       required this.maximunAmount,
       required this.amountToIncrease,
       required this.increaseEveryNLoans,
-      required this.availableFor,
+      this.availableFor,
       required this.createdAt,
       required this.updatedAt})
       : super._() {
@@ -378,8 +384,6 @@ class _$GGetLoanTypesData_getLoanTypes extends GGetLoanTypesData_getLoanTypes {
         r'GGetLoanTypesData_getLoanTypes', 'amountToIncrease');
     BuiltValueNullFieldError.checkNotNull(increaseEveryNLoans,
         r'GGetLoanTypesData_getLoanTypes', 'increaseEveryNLoans');
-    BuiltValueNullFieldError.checkNotNull(
-        availableFor, r'GGetLoanTypesData_getLoanTypes', 'availableFor');
     BuiltValueNullFieldError.checkNotNull(
         createdAt, r'GGetLoanTypesData_getLoanTypes', 'createdAt');
     BuiltValueNullFieldError.checkNotNull(
@@ -504,9 +508,10 @@ class GGetLoanTypesData_getLoanTypesBuilder
   set increaseEveryNLoans(int? increaseEveryNLoans) =>
       _$this._increaseEveryNLoans = increaseEveryNLoans;
 
-  _i2.GEmployeesTypes? _availableFor;
-  _i2.GEmployeesTypes? get availableFor => _$this._availableFor;
-  set availableFor(_i2.GEmployeesTypes? availableFor) =>
+  ListBuilder<_i2.GEmployeesTypes>? _availableFor;
+  ListBuilder<_i2.GEmployeesTypes> get availableFor =>
+      _$this._availableFor ??= new ListBuilder<_i2.GEmployeesTypes>();
+  set availableFor(ListBuilder<_i2.GEmployeesTypes>? availableFor) =>
       _$this._availableFor = availableFor;
 
   _i2.GDateTimeBuilder? _createdAt;
@@ -538,7 +543,7 @@ class GGetLoanTypesData_getLoanTypesBuilder
       _maximunAmount = $v.maximunAmount;
       _amountToIncrease = $v.amountToIncrease;
       _increaseEveryNLoans = $v.increaseEveryNLoans;
-      _availableFor = $v.availableFor;
+      _availableFor = $v.availableFor?.toBuilder();
       _createdAt = $v.createdAt.toBuilder();
       _updatedAt = $v.updatedAt.toBuilder();
       _$v = null;
@@ -583,12 +588,14 @@ class GGetLoanTypesData_getLoanTypesBuilder
                   BuiltValueNullFieldError.checkNotNull(maximunAmount, r'GGetLoanTypesData_getLoanTypes', 'maximunAmount'),
               amountToIncrease: BuiltValueNullFieldError.checkNotNull(amountToIncrease, r'GGetLoanTypesData_getLoanTypes', 'amountToIncrease'),
               increaseEveryNLoans: BuiltValueNullFieldError.checkNotNull(increaseEveryNLoans, r'GGetLoanTypesData_getLoanTypes', 'increaseEveryNLoans'),
-              availableFor: BuiltValueNullFieldError.checkNotNull(availableFor, r'GGetLoanTypesData_getLoanTypes', 'availableFor'),
+              availableFor: _availableFor?.build(),
               createdAt: createdAt.build(),
               updatedAt: updatedAt.build());
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'availableFor';
+        _availableFor?.build();
         _$failedField = 'createdAt';
         createdAt.build();
         _$failedField = 'updatedAt';

@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/location_cubit/location_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/screens/shared/drawer_menu/drawer_menu.dart';
+import 'package:solufacil_mobile/graphql/queries/__generated__/locality.data.gql.dart';
 
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
   const MyAppBar({super.key});
@@ -41,18 +44,13 @@ class MyAppBarState extends State<MyAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final localitiesScreenState = context.watch<LocalitiesScreenState>();
+
     return AppBar(
       title: AnimatedCrossFade(
         firstChild: const Text('Localidades'),
-        secondChild: TextField(
-          controller: _searchController,
-          decoration: const InputDecoration(
-            hintText: 'Search',
-            border: InputBorder.none,
-          ),
-          onChanged: (value) {
-            // Implement your filter logic here
-          },
+        secondChild: SearchLocalitiesInput(
+          searchController: _searchController,
         ),
         crossFadeState:
             _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
@@ -97,32 +95,47 @@ class LocalitiesScreen extends StatefulWidget {
 }
 
 class LocalitiesScreenState extends State<LocalitiesScreen> {
-  List<Locality> localities =
-      []; // Replace Locality with your actual model class
+List<GLocationsData_locations?> localities = []; // Replace Locality with your actual model class
 
   String currentRoute = 'Route 1'; // Default route
+  StreamSubscription? _subscription;
 
-  handleGetLocalities() async {
+  handleGetLocalities(String name) async {
     // Implement your logic to fetch the localities here
     // You can use an API call or any other method to retrieve the data
     // Once you have the data, update the localities list using setState
     // Example:
-    final locationCubit = context.read<LocationCubit>();
-    await locationCubit.fetchLocations(context, "", "1");
-  }
+      final locationCubit = context.read<LocationCubit>();
+      _subscription?.cancel();
+      _subscription = locationCubit.stream.listen((state) {
+        if (state.locations != null && mounted) {
+          setState(() {
+            localities = state.locations!;
+          });
+        }
+      });
+      await locationCubit.fetchLocations(context, name, "1");
+    if(mounted){
 
+    }
+  }
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
   @override
   void initState() {
     super.initState();
     // Call the getLocalities method here to fetch the localities
-    handleGetLocalities();
+    handleGetLocalities("");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(),
-      drawer: DrawerMenu(),
+      drawer: const DrawerMenu(),
       body: Column(
         children: [
           Expanded(
@@ -214,6 +227,42 @@ class LocalitiesScreenState extends State<LocalitiesScreen> {
   }
 }
 
+class SearchLocalitiesInput extends StatefulWidget {
+  final TextEditingController searchController;
+
+  SearchLocalitiesInput({required this.searchController});
+
+  @override
+  _SearchLocalitiesInputState createState() => _SearchLocalitiesInputState();
+}
+
+class _SearchLocalitiesInputState extends State<SearchLocalitiesInput> {
+  @override
+  Widget build(BuildContext context) {
+    final localitiesScreenState = context.watch<LocalitiesScreenState>();
+
+    return TextField(
+      controller: widget.searchController,
+      decoration: const InputDecoration(
+        hintText: 'Search',
+        border: InputBorder.none,
+      ),
+      onChanged: (value) async {
+        // Implement your filter logic here
+        print('Value changed: $value');
+        /* await Future.delayed(Duration(seconds: 1));
+        if (mounted) {
+          try {
+            localitiesScreenState.handleGetLocalities(value);
+            print('handleGetLocalities called successfully');
+          } catch (e) {
+            print('Failed to call handleGetLocalities: $e');
+          }
+        } */
+      },
+    );
+  }
+}
 class Locality {
   final String name;
   final String state;

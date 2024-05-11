@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solufacil_mobile/app/config/config.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
+import 'package:solufacil_mobile/app/presentation/blocs/loan_types_cubit/loan_types_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/location_cubit/location_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/route_cubit/route_cubit.dart';
 import 'package:solufacil_mobile/data/remote/client.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider<LocationCubit>(
                 create: (context) => LocationCubit(),
+              ),
+              BlocProvider<LoanTypesCubit>(
+                create: (context) => LoanTypesCubit(),
               ),
             ],
             child: MaterialApp.router(
