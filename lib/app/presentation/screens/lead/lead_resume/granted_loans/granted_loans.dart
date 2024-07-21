@@ -11,8 +11,10 @@ class Loan {
 
 class GrantedLoansScreen extends StatelessWidget {
   final List<Loan> loans;
+  final String leadId;
+  final String locationId;
 
-  GrantedLoansScreen({required this.loans});
+  GrantedLoansScreen({required this.loans, required this.leadId, required this.locationId});
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +98,8 @@ class GrantedLoansScreen extends StatelessWidget {
               // Handle create/grant a new loan
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoanForm()),
+                MaterialPageRoute(builder: (context) => LoanForm(leadId: leadId, locationId: locationId)),
               );
-
             },
             backgroundColor: const Color(0xFF89CFF0),
             child: const Icon(Icons.add),

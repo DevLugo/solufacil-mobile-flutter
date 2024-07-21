@@ -1,0 +1,23 @@
+query getPaymentSchedules($where:PaymentScheduleWhereInput){
+  getPaymentSchedules(where:$where){
+    id
+    numeration
+    amountToPay
+    pendingAmount
+    paidAmount
+    returnToCapital
+    profit
+    status
+		details
+    delayed
+    dueDate
+    createdAt
+    updatedAt
+  	borrower{
+      id
+      personalData {
+        fullName
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+query getEmployee(
+	$where: EmployeeWhereUniqueInput!
+){
+  getEmployee(where: $where){
+    id
+    userId
+    personalData{
+      fullName
+      addresses{
+        locationId
+        location{
+          name
+          municipality
+          {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/index.dart';
 
@@ -9,6 +11,7 @@ class LoanResumeForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        Text(jsonEncode(loanFormState.client?.toMap())),
         buildCard('Client Information', loanFormState.client),
         buildCard('Aval Information', loanFormState.aval),
         buildCard('Loan Information', loanFormState.loanConf),
@@ -26,6 +29,7 @@ class LoanResumeForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(loanFormState.locationId),
             SizedBox(height: 10),
             ...data.toMap().entries.map((entry) {
               return Text('${entry.key}: ${entry.value}', style: TextStyle(fontSize: 16));

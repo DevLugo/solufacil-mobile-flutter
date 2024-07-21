@@ -1,0 +1,7 @@
+mutation payPayment(
+ $input: PayLoanPaymentInput!
+){
+  payPayment(input: $input){
+    id
+  }
+}

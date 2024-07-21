@@ -313,18 +313,21 @@ class _$GCreateAddressInputSerializer
       'street',
       serializers.serialize(object.street,
           specifiedType: const FullType(String)),
-      'interiorNumber',
-      serializers.serialize(object.interiorNumber,
+      'exteriorNumber',
+      serializers.serialize(object.exteriorNumber,
+          specifiedType: const FullType(String)),
+      'locationId',
+      serializers.serialize(object.locationId,
           specifiedType: const FullType(String)),
       'postalCode',
       serializers.serialize(object.postalCode,
           specifiedType: const FullType(String)),
     ];
     Object? value;
-    value = object.exteriorNumber;
+    value = object.interiorNumber;
     if (value != null) {
       result
-        ..add('exteriorNumber')
+        ..add('interiorNumber')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
@@ -356,11 +359,15 @@ class _$GCreateAddressInputSerializer
           break;
         case 'exteriorNumber':
           result.exteriorNumber = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
+              specifiedType: const FullType(String))! as String;
+          break;
+        case 'locationId':
+          result.locationId = serializers.deserialize(value,
+              specifiedType: const FullType(String))! as String;
           break;
         case 'interiorNumber':
           result.interiorNumber = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'postalCode':
           result.postalCode = serializers.deserialize(value,
@@ -400,6 +407,9 @@ class _$GCreatePersonalDataInputSerializer
       'lastName',
       serializers.serialize(object.lastName,
           specifiedType: const FullType(String)),
+      'birthDate',
+      serializers.serialize(object.birthDate,
+          specifiedType: const FullType(GDate)),
       'phones',
       serializers.serialize(object.phones,
           specifiedType: const FullType(
@@ -436,6 +446,10 @@ class _$GCreatePersonalDataInputSerializer
         case 'lastName':
           result.lastName = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
+          break;
+        case 'birthDate':
+          result.birthDate.replace(serializers.deserialize(value,
+              specifiedType: const FullType(GDate))! as GDate);
           break;
         case 'phones':
           result.phones.replace(serializers.deserialize(value,
@@ -629,7 +643,7 @@ class _$GLoanCreateInputSerializer
           specifiedType: const FullType(String)),
       'amountGived',
       serializers.serialize(object.amountGived,
-          specifiedType: const FullType(GDecimal)),
+          specifiedType: const FullType(double)),
       'loanTypeId',
       serializers.serialize(object.loanTypeId,
           specifiedType: const FullType(String)),
@@ -707,8 +721,8 @@ class _$GLoanCreateInputSerializer
               specifiedType: const FullType(String))! as String;
           break;
         case 'amountGived':
-          result.amountGived.replace(serializers.deserialize(value,
-              specifiedType: const FullType(GDecimal))! as GDecimal);
+          result.amountGived = serializers.deserialize(value,
+              specifiedType: const FullType(double))! as double;
           break;
         case 'loanTypeId':
           result.loanTypeId = serializers.deserialize(value,
@@ -1448,9 +1462,11 @@ class _$GCreateAddressInput extends GCreateAddressInput {
   @override
   final String street;
   @override
-  final String? exteriorNumber;
+  final String exteriorNumber;
   @override
-  final String interiorNumber;
+  final String locationId;
+  @override
+  final String? interiorNumber;
   @override
   final String postalCode;
   @override
@@ -1462,15 +1478,18 @@ class _$GCreateAddressInput extends GCreateAddressInput {
 
   _$GCreateAddressInput._(
       {required this.street,
-      this.exteriorNumber,
-      required this.interiorNumber,
+      required this.exteriorNumber,
+      required this.locationId,
+      this.interiorNumber,
       required this.postalCode,
       this.references})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         street, r'GCreateAddressInput', 'street');
     BuiltValueNullFieldError.checkNotNull(
-        interiorNumber, r'GCreateAddressInput', 'interiorNumber');
+        exteriorNumber, r'GCreateAddressInput', 'exteriorNumber');
+    BuiltValueNullFieldError.checkNotNull(
+        locationId, r'GCreateAddressInput', 'locationId');
     BuiltValueNullFieldError.checkNotNull(
         postalCode, r'GCreateAddressInput', 'postalCode');
   }
@@ -1490,6 +1509,7 @@ class _$GCreateAddressInput extends GCreateAddressInput {
     return other is GCreateAddressInput &&
         street == other.street &&
         exteriorNumber == other.exteriorNumber &&
+        locationId == other.locationId &&
         interiorNumber == other.interiorNumber &&
         postalCode == other.postalCode &&
         references == other.references;
@@ -1500,6 +1520,7 @@ class _$GCreateAddressInput extends GCreateAddressInput {
     var _$hash = 0;
     _$hash = $jc(_$hash, street.hashCode);
     _$hash = $jc(_$hash, exteriorNumber.hashCode);
+    _$hash = $jc(_$hash, locationId.hashCode);
     _$hash = $jc(_$hash, interiorNumber.hashCode);
     _$hash = $jc(_$hash, postalCode.hashCode);
     _$hash = $jc(_$hash, references.hashCode);
@@ -1512,6 +1533,7 @@ class _$GCreateAddressInput extends GCreateAddressInput {
     return (newBuiltValueToStringHelper(r'GCreateAddressInput')
           ..add('street', street)
           ..add('exteriorNumber', exteriorNumber)
+          ..add('locationId', locationId)
           ..add('interiorNumber', interiorNumber)
           ..add('postalCode', postalCode)
           ..add('references', references))
@@ -1531,6 +1553,10 @@ class GCreateAddressInputBuilder
   String? get exteriorNumber => _$this._exteriorNumber;
   set exteriorNumber(String? exteriorNumber) =>
       _$this._exteriorNumber = exteriorNumber;
+
+  String? _locationId;
+  String? get locationId => _$this._locationId;
+  set locationId(String? locationId) => _$this._locationId = locationId;
 
   String? _interiorNumber;
   String? get interiorNumber => _$this._interiorNumber;
@@ -1552,6 +1578,7 @@ class GCreateAddressInputBuilder
     if ($v != null) {
       _street = $v.street;
       _exteriorNumber = $v.exteriorNumber;
+      _locationId = $v.locationId;
       _interiorNumber = $v.interiorNumber;
       _postalCode = $v.postalCode;
       _references = $v.references;
@@ -1579,9 +1606,11 @@ class GCreateAddressInputBuilder
         new _$GCreateAddressInput._(
             street: BuiltValueNullFieldError.checkNotNull(
                 street, r'GCreateAddressInput', 'street'),
-            exteriorNumber: exteriorNumber,
-            interiorNumber: BuiltValueNullFieldError.checkNotNull(
-                interiorNumber, r'GCreateAddressInput', 'interiorNumber'),
+            exteriorNumber: BuiltValueNullFieldError.checkNotNull(
+                exteriorNumber, r'GCreateAddressInput', 'exteriorNumber'),
+            locationId: BuiltValueNullFieldError.checkNotNull(
+                locationId, r'GCreateAddressInput', 'locationId'),
+            interiorNumber: interiorNumber,
             postalCode: BuiltValueNullFieldError.checkNotNull(
                 postalCode, r'GCreateAddressInput', 'postalCode'),
             references: references);
@@ -1598,6 +1627,8 @@ class _$GCreatePersonalDataInput extends GCreatePersonalDataInput {
   @override
   final String lastName;
   @override
+  final GDate birthDate;
+  @override
   final BuiltList<GCreatePhoneInput> phones;
   @override
   final BuiltList<GCreateAddressInput> adresses;
@@ -1610,6 +1641,7 @@ class _$GCreatePersonalDataInput extends GCreatePersonalDataInput {
       {required this.curp,
       required this.firstName,
       required this.lastName,
+      required this.birthDate,
       required this.phones,
       required this.adresses})
       : super._() {
@@ -1619,6 +1651,8 @@ class _$GCreatePersonalDataInput extends GCreatePersonalDataInput {
         firstName, r'GCreatePersonalDataInput', 'firstName');
     BuiltValueNullFieldError.checkNotNull(
         lastName, r'GCreatePersonalDataInput', 'lastName');
+    BuiltValueNullFieldError.checkNotNull(
+        birthDate, r'GCreatePersonalDataInput', 'birthDate');
     BuiltValueNullFieldError.checkNotNull(
         phones, r'GCreatePersonalDataInput', 'phones');
     BuiltValueNullFieldError.checkNotNull(
@@ -1641,6 +1675,7 @@ class _$GCreatePersonalDataInput extends GCreatePersonalDataInput {
         curp == other.curp &&
         firstName == other.firstName &&
         lastName == other.lastName &&
+        birthDate == other.birthDate &&
         phones == other.phones &&
         adresses == other.adresses;
   }
@@ -1651,6 +1686,7 @@ class _$GCreatePersonalDataInput extends GCreatePersonalDataInput {
     _$hash = $jc(_$hash, curp.hashCode);
     _$hash = $jc(_$hash, firstName.hashCode);
     _$hash = $jc(_$hash, lastName.hashCode);
+    _$hash = $jc(_$hash, birthDate.hashCode);
     _$hash = $jc(_$hash, phones.hashCode);
     _$hash = $jc(_$hash, adresses.hashCode);
     _$hash = $jf(_$hash);
@@ -1663,6 +1699,7 @@ class _$GCreatePersonalDataInput extends GCreatePersonalDataInput {
           ..add('curp', curp)
           ..add('firstName', firstName)
           ..add('lastName', lastName)
+          ..add('birthDate', birthDate)
           ..add('phones', phones)
           ..add('adresses', adresses))
         .toString();
@@ -1686,6 +1723,10 @@ class GCreatePersonalDataInputBuilder
   String? get lastName => _$this._lastName;
   set lastName(String? lastName) => _$this._lastName = lastName;
 
+  GDateBuilder? _birthDate;
+  GDateBuilder get birthDate => _$this._birthDate ??= new GDateBuilder();
+  set birthDate(GDateBuilder? birthDate) => _$this._birthDate = birthDate;
+
   ListBuilder<GCreatePhoneInput>? _phones;
   ListBuilder<GCreatePhoneInput> get phones =>
       _$this._phones ??= new ListBuilder<GCreatePhoneInput>();
@@ -1705,6 +1746,7 @@ class GCreatePersonalDataInputBuilder
       _curp = $v.curp;
       _firstName = $v.firstName;
       _lastName = $v.lastName;
+      _birthDate = $v.birthDate.toBuilder();
       _phones = $v.phones.toBuilder();
       _adresses = $v.adresses.toBuilder();
       _$v = null;
@@ -1737,11 +1779,14 @@ class GCreatePersonalDataInputBuilder
                   firstName, r'GCreatePersonalDataInput', 'firstName'),
               lastName: BuiltValueNullFieldError.checkNotNull(
                   lastName, r'GCreatePersonalDataInput', 'lastName'),
+              birthDate: birthDate.build(),
               phones: phones.build(),
               adresses: adresses.build());
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'birthDate';
+        birthDate.build();
         _$failedField = 'phones';
         phones.build();
         _$failedField = 'adresses';
@@ -2279,7 +2324,7 @@ class _$GLoanCreateInput extends GLoanCreateInput {
   @override
   final String loanLeadId;
   @override
-  final GDecimal amountGived;
+  final double amountGived;
   @override
   final String loanTypeId;
   @override
@@ -2401,11 +2446,9 @@ class GLoanCreateInputBuilder
   String? get loanLeadId => _$this._loanLeadId;
   set loanLeadId(String? loanLeadId) => _$this._loanLeadId = loanLeadId;
 
-  GDecimalBuilder? _amountGived;
-  GDecimalBuilder get amountGived =>
-      _$this._amountGived ??= new GDecimalBuilder();
-  set amountGived(GDecimalBuilder? amountGived) =>
-      _$this._amountGived = amountGived;
+  double? _amountGived;
+  double? get amountGived => _$this._amountGived;
+  set amountGived(double? amountGived) => _$this._amountGived = amountGived;
 
   String? _loanTypeId;
   String? get loanTypeId => _$this._loanTypeId;
@@ -2426,7 +2469,7 @@ class GLoanCreateInputBuilder
       _borrower = $v.borrower?.toBuilder();
       _avals = $v.avals?.toBuilder();
       _loanLeadId = $v.loanLeadId;
-      _amountGived = $v.amountGived.toBuilder();
+      _amountGived = $v.amountGived;
       _loanTypeId = $v.loanTypeId;
       _signDate = $v.signDate?.toBuilder();
       _$v = null;
@@ -2461,7 +2504,8 @@ class GLoanCreateInputBuilder
               avals: _avals?.build(),
               loanLeadId: BuiltValueNullFieldError.checkNotNull(
                   loanLeadId, r'GLoanCreateInput', 'loanLeadId'),
-              amountGived: amountGived.build(),
+              amountGived: BuiltValueNullFieldError.checkNotNull(
+                  amountGived, r'GLoanCreateInput', 'amountGived'),
               loanTypeId: BuiltValueNullFieldError.checkNotNull(
                   loanTypeId, r'GLoanCreateInput', 'loanTypeId'),
               signDate: _signDate?.build());
@@ -2475,9 +2519,6 @@ class GLoanCreateInputBuilder
         _borrower?.build();
         _$failedField = 'avals';
         _avals?.build();
-
-        _$failedField = 'amountGived';
-        amountGived.build();
 
         _$failedField = 'signDate';
         _signDate?.build();

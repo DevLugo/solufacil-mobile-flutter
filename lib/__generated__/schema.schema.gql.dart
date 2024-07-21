@@ -95,8 +95,9 @@ abstract class GCreateAddressInput
       _$GCreateAddressInput;
 
   String get street;
-  String? get exteriorNumber;
-  String get interiorNumber;
+  String get exteriorNumber;
+  String get locationId;
+  String? get interiorNumber;
   String get postalCode;
   String? get references;
   static Serializer<GCreateAddressInput> get serializer =>
@@ -126,6 +127,7 @@ abstract class GCreatePersonalDataInput
   String get curp;
   String get firstName;
   String get lastName;
+  GDate get birthDate;
   BuiltList<GCreatePhoneInput> get phones;
   BuiltList<GCreateAddressInput> get adresses;
   static Serializer<GCreatePersonalDataInput> get serializer =>
@@ -285,7 +287,7 @@ abstract class GLoanCreateInput
   GBorrowerCreateInput? get borrower;
   BuiltList<GCreatePersonalDataInput>? get avals;
   String get loanLeadId;
-  GDecimal get amountGived;
+  double get amountGived;
   String get loanTypeId;
   GDate? get signDate;
   static Serializer<GLoanCreateInput> get serializer =>

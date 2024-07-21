@@ -35,6 +35,9 @@ dependencies:
   gql_http_link: ^1.0.1+1
   hive_flutter: ^1.1.0
   ferry_hive_store: ^0.5.2
+  faker: ^2.1.0
+  shimmer: ^3.0.0
+  built_collection: ^5.1.1
   hive: ^2.2.3
   gql: ^1.0.0+1
   meta: ^1.10.0

@@ -11,12 +11,23 @@ import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/grant
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/index.dart';
 import 'package:solufacil_mobile/app/widgets/common/image_cropper_page.dart';
 
+typedef FormValidationFunction = void Function(
+    GlobalKey<FormState> formKey, ValueSetter<bool> updateIsValid);
+
 /* class StepOneContent extends StatelessWidget { */
 class PersonalDataForm extends StatefulWidget {
   final Function(String, String, [int?]) onUpdate;
+  //final Function(GlobalKey<FormState> formKey, ValueSetter<bool> updateIsValid) validateForm;
+  final FormValidationFunction validateForm;
   final PersonalDataState data;
+  final bool isFormValid;
+  //Personal data form will receive this functionÑ
 
-  PersonalDataForm({required this.onUpdate, required this.data});
+  PersonalDataForm(
+      {required this.onUpdate,
+      required this.validateForm,
+      required this.data,
+      required this.isFormValid});
 
   @override
   _PersonalDataFormState createState() => _PersonalDataFormState();
@@ -47,6 +58,8 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
   late TextEditingController referencesController;
   late ValueNotifier<List<String>> phoneNumbersNotifier =
       ValueNotifier<List<String>>([]);
+  bool _hasErrors = false;
+
   @override
   void initState() {
     super.initState();
@@ -77,19 +90,20 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
       return const Icon(Icons.close);
     },
   );
-  /* StepOneContent({required this.onUpdate, required this.data}){
-      firstNameController = TextEditingController(text: data.firstName);
-      lastNameController = TextEditingController(text: data.lastName);
-      curpController = TextEditingController(text: data.curp);
-      electoralKeyController = TextEditingController(text: data.electoralKey);
-      externalNumberController = TextEditingController(text: data.externalNumber);
-      streetController = TextEditingController(text: data.street);
-      /* municipalityController = TextEditingController(text: data.); */
-      postalCodeController = TextEditingController(text: data.postalCode);
-      birthDateController = TextEditingController(text: data.birthDate.toString());
-      /* neighborhoodController = TextEditingController(text: data.municipality); */
 
-  } */
+  void handleChanged(String fieldName, String value, [int? index]) {
+    if (!widget.isFormValid) {
+      widget.validateForm(
+        _formKey,
+        (bool isValid) {
+          setState(() {
+            _hasErrors = !isValid;
+          });
+        },
+      );
+    }
+    widget.onUpdate(fieldName, value);
+  }
 
   Map<String, dynamic>? _result;
 
@@ -165,16 +179,64 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
 
             // Seed the form with random data
             firstNameController.text = firstName;
+            firstNameController.value = firstNameController.value.copyWith(
+              text: firstName,
+            );
+            
+
             lastNameController.text = lastName;
+            lastNameController.value = lastNameController.value.copyWith(
+              text: lastName,
+            );
             curpController.text = curp;
-            electoralKeyController.text = '12345678901234567890${random.nextInt(100)}';
+            curpController.value = curpController.value.copyWith(
+              text: curp,
+            );
+            electoralKeyController.text =
+                '12345678901234567890${random.nextInt(100)}';
+            electoralKeyController.value = electoralKeyController.value.copyWith(
+              text: '12345678901234567890${random.nextInt(100)}',
+            );
             exteriorNumberController.text = '123${random.nextInt(100)}';
+            exteriorNumberController.value =
+                exteriorNumberController.value.copyWith(
+              text: '123${random.nextInt(100)}',
+            );
             streetController.text = 'Main Street ${random.nextInt(100)}';
+            streetController.value = streetController.value.copyWith(
+              text: 'Main Street ${random.nextInt(100)}',
+            );
             postalCodeController.text = '12345${random.nextInt(100)}';
+            postalCodeController.value = postalCodeController.value.copyWith(
+              text: '12345${random.nextInt(100)}',
+            );
             dateController.text = '2021-01-01';
+            dateController.value = dateController.value.copyWith(
+              text: '2021-01-01',
+            );
             widget.onUpdate('phoneNumbers', "123123");
+
             phoneNumbersNotifier.value = ['123123'];
-            referencesController.text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.${random.nextInt(100)}';
+            referencesController.text =
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.${random.nextInt(100)}';
+            referencesController.value = referencesController.value.copyWith(
+              text:
+                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.${random.nextInt(100)}',
+            );
+            handleChanged('firstName', firstName);
+            handleChanged('lastName', lastName);
+            handleChanged('curp', curp);
+            handleChanged('electoralKey', '12345678901234567890');
+            handleChanged('exteriorNumber', '123');
+            handleChanged('street', 'Main Street');
+            handleChanged('postalCode', '12345');
+            handleChanged('birthDate', '2021-01-01');
+            handleChanged('phoneNumbers', '123123');
+            handleChanged(
+                'references',
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.${random.nextInt(100)}');
+            
+            
           },
           child: const Text('Llenar formulario'),
         ),
@@ -213,7 +275,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                         return null;
                       },
                       onChanged: (value) {
-                        widget.onUpdate('email', value);
+                        handleChanged('email', value);
                       },
                       onSaved: (value) {
                         /* email = value; */
@@ -230,7 +292,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                       },
                       controller: firstNameController,
                       onChanged: (value) {
-                        widget.onUpdate('firstName', value);
+                        handleChanged('firstName', value);
                       },
                       onSaved: (value) {
                         /* firstName = value; */
@@ -246,7 +308,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                       },
                       controller: lastNameController,
                       onChanged: (value) {
-                        widget.onUpdate('lastName', value);
+                        handleChanged('lastName', value);
                       },
                       onSaved: (value) {
                         /* lastName = value; */
@@ -260,7 +322,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                         }
                         return null;
                       },
-                      onChanged: (value) => widget.onUpdate('curp', value),
+                      onChanged: (value) => handleChanged('curp', value),
                       controller: curpController,
                       onSaved: (value) {
                         /* curp = value; */
@@ -277,7 +339,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                       },
                       controller: electoralKeyController,
                       onChanged: (value) {
-                        widget.onUpdate('electoralKey', value);
+                        handleChanged('electoralKey', value);
                       },
                       onSaved: (value) {
                         /* rfc = value; */
@@ -315,12 +377,12 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                           return null;
                                         },
                                         onChanged: (value) {
-                                          widget.onUpdate(
+                                          handleChanged(
                                               'phoneNumbers', value, index);
                                         },
                                         onSaved: (value) {
                                           if (value != null) {
-                                            widget.onUpdate(
+                                            handleChanged(
                                                 'phoneNumbers', value, index);
                                           }
                                         },
@@ -355,7 +417,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                       onPressed: () {
                         String newPhoneNumber =
                             ''; // Replace with the new phone number
-                        widget.onUpdate('phoneNumbers', newPhoneNumber);
+                        handleChanged('phoneNumbers', newPhoneNumber);
                         phoneNumbersNotifier.value =
                             List.from(phoneNumbersNotifier.value)
                               ..add(newPhoneNumber);
@@ -371,11 +433,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                         return null;
                       },
                       onChanged: (value) {
-                        widget.onUpdate('street', value);
-                      },
-                      onSaved: (value) {
-                        // Save the street value
-                        /* street = value; */
+                        handleChanged('street', value);
                       },
                     ),
                     Row(
@@ -385,11 +443,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                             decoration:
                                 InputDecoration(labelText: 'Número Interior'),
                             onChanged: (value) =>
-                                widget.onUpdate('internalNumber', value),
-                            onSaved: (value) {
-                              // Save the interior number value
-                              /* interiorNumber = value; */
-                            },
+                                handleChanged('internalNumber', value),
                           ),
                         ),
                         SizedBox(
@@ -404,7 +458,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                               /* exteriorNumber = value; */
                             },
                             onChanged: (value) {
-                              widget.onUpdate('exteriorNumber', value);
+                              handleChanged('exteriorNumber', value);
                             },
                           ),
                         ),
@@ -423,7 +477,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                         return null;
                       },
                       onChanged: (value) {
-                        widget.onUpdate('references', value);
+                        handleChanged('references', value);
                       },
                       onSaved: (value) {
                         // Save the references value
@@ -456,7 +510,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                                 String formattedDate =
                                     DateFormat('yyyy-MM-dd').format(pickedDate);
                                 dateController.text = formattedDate;
-                                widget.onUpdate('birthDate', formattedDate);
+                                handleChanged('birthDate', formattedDate);
                               }
                             },
                           ),
@@ -471,7 +525,7 @@ class _PersonalDataFormState extends State<PersonalDataForm> {
                             controller: postalCodeController,
                             keyboardType: TextInputType.multiline,
                             onChanged: (value) {
-                              widget.onUpdate('postalCode', value);
+                              handleChanged('postalCode', value);
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {

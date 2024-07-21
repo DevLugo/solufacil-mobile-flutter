@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solufacil_mobile/app/config/config.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/authentication_cubit/authentication_cubit.dart';
+import 'package:solufacil_mobile/app/presentation/blocs/employee_cubit/employee_cubit.dart';
+import 'package:solufacil_mobile/app/presentation/blocs/loan_cubit/loan_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/loan_types_cubit/loan_types_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/location_cubit/location_cubit.dart';
+import 'package:solufacil_mobile/app/presentation/blocs/paymentSchedule_cubit/payment_schedule_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/route_cubit/route_cubit.dart';
 import 'package:solufacil_mobile/data/remote/client.dart';
 
@@ -33,6 +36,9 @@ class MyApp extends StatelessWidget {
               BlocProvider<AuthenticationCubit>(
                 create: (context) => AuthenticationCubit(client),
               ),
+              BlocProvider<EmployeeCubit>(
+                create: (context) => EmployeeCubit(),
+              ),
               BlocProvider<RouteCubit>(
                 create: (context) => RouteCubit(),
               ),
@@ -41,6 +47,12 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider<LoanTypesCubit>(
                 create: (context) => LoanTypesCubit(),
+              ),
+              BlocProvider<LoanCubit>(
+                create: (context) => LoanCubit(),
+              ),
+              BlocProvider<PaymentScheduleCubit>(
+                create: (context) => PaymentScheduleCubit(),
               ),
             ],
             child: MaterialApp.router(

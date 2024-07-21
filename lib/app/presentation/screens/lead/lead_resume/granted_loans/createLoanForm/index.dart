@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:solufacil_mobile/__generated__/schema.schema.gql.dart';
+import 'package:solufacil_mobile/app/presentation/blocs/loan_cubit/loan_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/loanConfForm.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/personalDataForm.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/resumeForm.dart';
@@ -9,7 +12,9 @@ import 'package:solufacil_mobile/graphql/queries/__generated__/loan.data.gql.dar
 enum StepType { client, aval, loanConf }
 
 class LoanForm extends StatefulWidget {
-  const LoanForm({Key? key}) : super(key: key);
+  final String leadId;
+  final String locationId;
+  const LoanForm({Key? key, required this.leadId, required this.locationId}) : super(key: key);
 
   @override
   _LoanFormState createState() => _LoanFormState();
@@ -19,6 +24,7 @@ class PersonalDataState {
   String? email;
   String? firstName;
   String? lastName;
+
   List<String> phoneNumbers = [''];
 
   //Street
@@ -30,6 +36,7 @@ class PersonalDataState {
   String? curp;
   String? electoralKey;
   String? municipality;
+  bool hasErrors = false;
 
   bool isClient = false;
   DateTime birthDate = DateTime.now();
@@ -48,8 +55,10 @@ class PersonalDataState {
     "curp",
     "electoralKey",
     "municipality",
-    "birthDate"
+    "birthDate",
+    "hasErrors"
   ];
+  
 
   PersonalDataState({
     this.email,
@@ -63,6 +72,7 @@ class PersonalDataState {
     this.curp,
     this.electoralKey,
     this.municipality,
+    this.hasErrors = false,
     required this.phoneNumbers,
   }) {
     // Initialize your lists here if needed
@@ -82,6 +92,7 @@ class PersonalDataState {
       "municipality": municipality,
       "phoneNumbers": phoneNumbers,
       "birthDate": birthDate.toIso8601String(),
+      "hasErrors": hasErrors,
       // Agrega los demás campos aquí...
     };
   }
@@ -101,6 +112,7 @@ class PersonalDataState {
       "electoralKey": electoralKey,
       "municipality": municipality,
       "birthDate": birthDate.toIso8601String(),
+      "hasErrors": hasErrors,
     };
   }
 
@@ -188,11 +200,15 @@ class LoanFormState {
   PersonalDataState? client;
   PersonalDataState? aval;
   LoanConfState? loanConf;
+  String leadId;
+  String locationId;
 
   LoanFormState({
     this.client,
     this.aval,
     this.loanConf,
+    required this.leadId,
+    required this.locationId,
   }) {
     client = PersonalDataState(
       phoneNumbers: [''],
@@ -215,7 +231,7 @@ class LoanFormState {
 
 class _LoanFormState extends State<LoanForm> {
   int _currentStep = 0;
-  LoanFormState formData = LoanFormState();
+  LoanFormState? formData;
   final clientForm = GlobalKey<FormState>();
   final avalForm = GlobalKey<FormState>();
   final loanConfForm = GlobalKey<FormState>();
@@ -224,6 +240,36 @@ class _LoanFormState extends State<LoanForm> {
   bool isLoanConfFormValid = true;
   List<int> visitedSteps = [0];
   final ScrollController scrollController = ScrollController();
+  late final GLoanCreateInput loanCreateInput;
+
+  @override
+  void initState() {
+    super.initState();
+    formData = LoanFormState(
+      locationId: widget.locationId,
+      leadId: widget.leadId,
+      aval: PersonalDataState(
+        phoneNumbers: [''],
+      ),
+      client: PersonalDataState(
+        phoneNumbers: [''],
+      ),
+      loanConf: LoanConfState(),
+    );
+  }
+
+  handleCreateLoan() async {
+    // Implement your logic to fetch the localities here
+    // You can use an API call or any other method to retrieve the data
+    // Once you have the data, update the localities list using setState
+    // Example:
+    final loanCubit = context.read<LoanCubit>();
+    try {
+      final res = await loanCubit.createLoanRequest(context, formData!, widget.locationId);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void validateForm(
       GlobalKey<FormState> formKey, ValueSetter<bool> updateIsValid) {
@@ -285,6 +331,8 @@ class _LoanFormState extends State<LoanForm> {
       case 'birthDate':
         data?.birthDate = DateTime.parse(value);
         break;
+      case 'hasErrors':
+        data?.hasErrors = value == 'true';
       // Add other fields here...
     }
   }
@@ -307,7 +355,7 @@ class _LoanFormState extends State<LoanForm> {
       case 'startDate':
         //data?.startDate = DateTime.parse(value);
         break;
-      case 'endDate':
+      case 'endDate':      
         data?.endDate = DateTime.parse(value);
         break;
       case 'firstPaymentDate':
@@ -335,22 +383,58 @@ class _LoanFormState extends State<LoanForm> {
       switch (type) {
         case StepType.client:
           if (field == 'phoneNumbers' && index == null) {
-            formData.client?.phoneNumbers ??= [];
-            formData.client?.phoneNumbers.add(value);
+            formData!.client?.phoneNumbers ??= [];
+            formData!.client?.phoneNumbers.add(value);
           } else {
-            updateFields(formData.client, field, value, index);
+            updateFields(formData!.client, field, value, index);
           }
           break;
         case StepType.aval:
           if (field == 'phoneNumbers' && index == null) {
-            formData.aval?.phoneNumbers ??= [];
-            formData.aval?.phoneNumbers.add(value);
+            formData!.aval?.phoneNumbers ??= [];
+            formData!.aval?.phoneNumbers.add(value);
           } else {
-            updateFields(formData.aval, field, value, index);
+            updateFields(formData!.aval, field, value, index);
           }
           break;
         case StepType.loanConf:
-          updateLoanConfigFields(formData.loanConf, field, value, index);
+          // Add this block
+          
+          if(field == 'loanType'){
+            updateLoanConfigFields(formData!.loanConf, field, value, index);
+            updateLoanConfigFields(formData!.loanConf, 'loanTypeId', value.id);
+          }
+
+          // Add this block
+          
+          if (
+            formData!.loanConf!.firstPaymentDate != null &&
+            formData!.loanConf!.loanType != null &&
+            formData!.loanConf!.requestedAmount != null &&
+            formData!.loanConf!.signDate != null
+            ) {
+            double totalAmountToPay = (formData!.loanConf!.requestedAmount ?? 0) * (1 + (formData!.loanConf!.loanType?.rate ?? 0));
+            print("totalAmountToPay: $totalAmountToPay");
+            double weeklyPayment = totalAmountToPay / (formData!.loanConf!.loanType?.weekDuration ?? 1);
+            print("weeklyPayment: $weeklyPayment");
+            print("formData!.loanConf!.amountToPay: ${formData!.loanConf!.amountToPay}");
+            print("formData!.loanConf!.weeklyPayment: ${formData!.loanConf!.weeklyPayment}");
+            // Only update the state if the values have changed
+            if (totalAmountToPay.toDouble() != formData!.loanConf!.amountToPay || weeklyPayment.toDouble() != formData!.loanConf!.weeklyPayment) {
+              updateLoanConfigFields(formData!.loanConf, 'amountToPay', totalAmountToPay.toString());
+              updateLoanConfigFields(formData!.loanConf, 'weeklyPayment', weeklyPayment.toString());
+            }
+          }
+          if (field == 'signDate' || field == 'firstPaymentDate' || field == 'requestedAmount') {
+            updateLoanConfigFields(formData!.loanConf, field, value, index);
+            if(field == 'firstPaymentDate'){
+              DateTime date = DateTime.parse(value);
+              DateTime endDate = date.add(Duration(
+                  days: ((formData?.loanConf?.loanType?.weekDuration ?? 0) -1) * 7
+              ));
+              updateLoanConfigFields(formData!.loanConf, 'endDate', endDate.toIso8601String());
+            }
+          }
           break;
       }
     });
@@ -362,169 +446,201 @@ class _LoanFormState extends State<LoanForm> {
       appBar: AppBar(
         title: const Text('Nuevo prestamo'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            // Agrega esto
-            child: Stepper(
-              controller: scrollController,
-              type: StepperType.horizontal,
-              currentStep: _currentStep,
-              onStepTapped: (step) {
-                if (visitedSteps.contains(step)) {
-                  //add step to the visitedSteps
-                  setState(() => _currentStep = step);
-                  scrollController.animateTo(
-                    0.0,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
+      body: BlocListener<LoanCubit, LoanCreationState>(
+        listener: (context, state) {
+          // Handle state changes
+          if (state.status == LoanStatus.succeed) {
+            Navigator.of(context).pop(); // Close modal or navigate
+          }
+          if (state.status == LoanStatus.failed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage ?? 'Error desconocido'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        child: Column(
+          children: [
+            Expanded(
+              // Agrega esto
+              child: Stepper(
+                controller: scrollController,
+                type: StepperType.horizontal,
+                currentStep: _currentStep,
+                onStepTapped: (step) {
+                  if (visitedSteps.contains(step)) {
+                    //add step to the visitedSteps
+                    setState(() => _currentStep = step);
+                    scrollController.animateTo(
+                      0.0,
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                controlsBuilder:
+                    (BuildContext context, ControlsDetails controlsDetails) {
+                  return Row(
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: () async {
+                          bool isValid = true;
+                          switch (_currentStep) {
+                            case 0:
+                              validateForm(clientForm,
+                                  (isValid) => isClientFormValid = isValid);
+                              if (isClientFormValid)
+                                controlsDetails.onStepContinue!();
+                              break;
+                            case 1:
+                              validateForm(avalForm,
+                                  (isValid) => isAvalFormValid = isValid);
+                              if (isAvalFormValid)
+                                controlsDetails.onStepContinue!();
+                              break;
+                            case 2:
+                              validateForm(loanConfForm,
+                                  (isValid) => isLoanConfFormValid = isValid);
+                              if (isLoanConfFormValid){
+                                controlsDetails.onStepContinue!();
+                                }
+                              break;
+                            case 3:
+                              //validateForm(loanConfForm, (isValid) => isLoanConfFormValid = isValid);
+                              
+                                try {
+                                  
+                                  await handleCreateLoan();
+                                } catch (e) {
+                                  print(e);
+                                }
+                              break;
+                          }
+                        },
+                        child: Text(_currentStep == 2 ? 'Otorgar' : 'Siguiente'),
+                      ),
+                      TextButton(
+                        onPressed: controlsDetails.onStepCancel,
+                        child: const Text('Regresar'),
+                      ),
+                    ],
                   );
-                }
-              },
-              controlsBuilder:
-                  (BuildContext context, ControlsDetails controlsDetails) {
-                return Row(
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        bool isValid = true;
-                        switch (_currentStep) {
-                          case 0:
-                            validateForm(clientForm,
-                                (isValid) => isClientFormValid = isValid);
-                            if (isClientFormValid)
-                              controlsDetails.onStepContinue!();
-                            break;
-                          case 1:
-                            validateForm(avalForm,
-                                (isValid) => isAvalFormValid = isValid);
-                            if (isAvalFormValid)
-                              controlsDetails.onStepContinue!();
-                            break;
-                          case 2:
-                            validateForm(loanConfForm,
-                                (isValid) => isLoanConfFormValid = isValid);
-                            if (isLoanConfFormValid){
-                              try {
-                                //LoanService().createLoan(formData);
-                              } catch (e) {
-                                print(e);
+                },
+                onStepContinue: () {
+                  if (_currentStep < 3) {
+                    setState(() => _currentStep += 1);
+                  }
+                  // If the current step is valid, add it to visitedSteps
+                  if (!visitedSteps.contains(_currentStep)) {
+                    setState(() {
+                      visitedSteps.add(_currentStep);
+                    });
+                  }
+                },
+                steps: [
+                  Step(
+                      title: Text(''),
+                      label: Text('Cliente'),
+                      isActive: _currentStep == 0,
+                      state: !visitedSteps.contains(_currentStep)
+                          ? StepState.disabled
+                          : (formData!.client != null
+                              ? (_currentStep == 0
+                                  ? StepState.editing
+                                  : (isClientFormValid
+                                      ? StepState.complete
+                                      : StepState.error))
+                              : StepState.indexed),
+                      content: Form(
+                        key: clientForm,
+                        child: PersonalDataForm(
+                            data: formData!.client!,
+                            onUpdate: (String field, String value, [int? index]) {
+                              if (!PersonalDataState.attributes.contains(field)) {
+                                throw ArgumentError('Invalid field: $field');
                               }
-                              }
-                            break;
-                          case 3:
-                            break;
-                        }
-                      },
-                      child: Text(_currentStep == 2 ? 'Otorgar' : 'Siguiente'),
-                    ),
-                    TextButton(
-                      onPressed: controlsDetails.onStepCancel,
-                      child: const Text('Regresar'),
-                    ),
-                  ],
-                );
-              },
-              onStepContinue: () {
-                if (_currentStep < 3) {
-                  setState(() => _currentStep += 1);
-                }
-                // If the current step is valid, add it to visitedSteps
-                if (!visitedSteps.contains(_currentStep)) {
-                  setState(() {
-                    visitedSteps.add(_currentStep);
-                  });
-                }
-              },
-              steps: [
-                Step(
+                              _updateFormData(
+                                  field, value, StepType.client, index);
+                            },
+                            isFormValid: isClientFormValid,
+                            /* validateForm: validateForm(clientForm, (isValid) => isClientFormValid = isValid) */
+                            validateForm: (formKey, updateIsValid) => validateForm(clientForm, (isValid) => isClientFormValid = isValid)
+                            ),
+                      )),
+                  Step(
                     title: Text(''),
-                    label: Text('Cliente'),
-                    isActive: _currentStep == 0,
+                    label: Text('Aval'),
+                    isActive: _currentStep == 1,
                     state: !visitedSteps.contains(_currentStep)
                         ? StepState.disabled
-                        : (formData.client != null
-                            ? (_currentStep == 0
+                        : (formData!.aval != null
+                            ? (_currentStep == 1
                                 ? StepState.editing
-                                : (isClientFormValid
+                                : (isAvalFormValid
                                     ? StepState.complete
                                     : StepState.error))
                             : StepState.indexed),
-                    content: Form(
-                      key: clientForm,
-                      child: PersonalDataForm(
-                          data: formData.client!,
-                          onUpdate: (String field, String value, [int? index]) {
-                            if (!PersonalDataState.attributes.contains(field)) {
-                              throw ArgumentError('Invalid field: $field');
-                            }
-                            _updateFormData(
-                                field, value, StepType.client, index);
-                          }),
-                    )),
-                Step(
-                  title: Text(''),
-                  label: Text('Aval'),
-                  isActive: _currentStep == 1,
-                  state: !visitedSteps.contains(_currentStep)
-                      ? StepState.disabled
-                      : (formData.aval != null
-                          ? (_currentStep == 1
-                              ? StepState.editing
-                              : (isAvalFormValid
-                                  ? StepState.complete
-                                  : StepState.error))
-                          : StepState.indexed),
-                  content: PersonalDataForm(
-                      data: formData.aval!,
-                      onUpdate: (String field, String value, [int? index]) {
-                        if (!PersonalDataState.attributes.contains(field)) {
-                          throw ArgumentError('Invalid field: $field');
-                        }
-                        _updateFormData(field, value, StepType.aval, index);
-                      }),
-                ),
-                Step(
-                  title: Text(''),
-                  label: Text('Prestamo'),
-                  isActive: _currentStep == 2,
-                  state: !visitedSteps.contains(_currentStep)
-                      ? StepState.disabled
-                      : (formData.loanConf != null
-                          ? (_currentStep == 2
-                              ? StepState.editing
-                              : (isLoanConfFormValid
-                                  ? StepState.complete
-                                  : StepState.error))
-                          : StepState.indexed),
-                  content: LoanConfForm(
-                      data: formData.loanConf!,
-                      onUpdate: (String field, dynamic value, [int? index]) {
-                        print("------------------");
-                        print("field: $field, value: $value, index: $index");
-                        print("------------------");
-                        if (!LoanConfState.attributes.contains(field)) {
-                          throw ArgumentError('Invalid field: $field');
-                        }
-                        _updateFormData(field, value, StepType.loanConf, index);
-                      }),
-                ),
-                Step(
-                  title: Text(''),
-                  label: Text('Resumen'),
-                  isActive: _currentStep == 3,
-                  state: _currentStep == 3
-                      ? StepState.complete
-                      : StepState.indexed,
-                  content: LoanResumeForm(
-                    loanFormState: formData,
+                    content: PersonalDataForm(
+                        data: formData!.aval!,
+                        onUpdate: (String field, String value, [int? index]) {
+                          if (!PersonalDataState.attributes.contains(field)) {
+                            throw ArgumentError('Invalid field: $field');
+                          }
+                          _updateFormData(field, value, StepType.aval, index);
+                        },
+                        isFormValid: isAvalFormValid,
+                        validateForm: (formKey, updateIsValid) => validateForm(avalForm, (isValid) => isClientFormValid = isValid)
+                        ),
                   ),
-                ),
-              ],
+                  Step(
+                    title: Text(''),
+                    label: Text('Prestamo'),
+                    isActive: _currentStep == 2,
+                    state: !visitedSteps.contains(_currentStep)
+                        ? StepState.disabled
+                        : (formData!.loanConf != null
+                            ? (_currentStep == 2
+                                ? StepState.editing
+                                : (isLoanConfFormValid
+                                    ? StepState.complete
+                                    : StepState.error))
+                            : StepState.indexed),
+                    content: LoanConfForm(
+                        data: formData!.loanConf!,
+                        onUpdate: (String field, dynamic value, [int? index]) {
+                          print("------------------");
+                          print("field: $field, value: $value, index: $index");
+                          print("------------------");
+                          if (!LoanConfState.attributes.contains(field)) {
+                            throw ArgumentError('Invalid field: $field');
+                          }
+                          _updateFormData(field, value, StepType.loanConf, index);
+                        },
+                        isFormValid: isLoanConfFormValid,
+                        validateForm: (formKey, updateIsValid) => validateForm(loanConfForm, (isValid) => isLoanConfFormValid = isValid)
+                        ),
+
+                        
+                  ),
+                  Step(
+                    title: Text(''),
+                    label: Text('Resumen'),
+                    isActive: _currentStep == 3,
+                    state: _currentStep == 3
+                        ? StepState.complete
+                        : StepState.indexed,
+                    content: LoanResumeForm(
+                      loanFormState: formData!,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      )
+  );
   }
 }

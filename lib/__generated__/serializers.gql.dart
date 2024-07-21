@@ -50,6 +50,24 @@ import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.req.gql.da
     show GCreateLoanReq;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.var.gql.dart'
     show GCreateLoanVars;
+import 'package:solufacil_mobile/graphql/mutations/__generated__/payment.data.gql.dart'
+    show GpayPaymentData, GpayPaymentData_payPayment;
+import 'package:solufacil_mobile/graphql/mutations/__generated__/payment.req.gql.dart'
+    show GpayPaymentReq;
+import 'package:solufacil_mobile/graphql/mutations/__generated__/payment.var.gql.dart'
+    show GpayPaymentVars;
+import 'package:solufacil_mobile/graphql/queries/__generated__/employee.data.gql.dart'
+    show
+        GgetEmployeeData,
+        GgetEmployeeData_getEmployee,
+        GgetEmployeeData_getEmployee_personalData,
+        GgetEmployeeData_getEmployee_personalData_addresses,
+        GgetEmployeeData_getEmployee_personalData_addresses_location,
+        GgetEmployeeData_getEmployee_personalData_addresses_location_municipality;
+import 'package:solufacil_mobile/graphql/queries/__generated__/employee.req.gql.dart'
+    show GgetEmployeeReq;
+import 'package:solufacil_mobile/graphql/queries/__generated__/employee.var.gql.dart'
+    show GgetEmployeeVars;
 import 'package:solufacil_mobile/graphql/queries/__generated__/loan.data.gql.dart'
     show GGetLoanTypesData, GGetLoanTypesData_getLoanTypes;
 import 'package:solufacil_mobile/graphql/queries/__generated__/loan.req.gql.dart'
@@ -68,6 +86,16 @@ import 'package:solufacil_mobile/graphql/queries/__generated__/locality.req.gql.
     show GLocationsReq;
 import 'package:solufacil_mobile/graphql/queries/__generated__/locality.var.gql.dart'
     show GLocationsVars;
+import 'package:solufacil_mobile/graphql/queries/__generated__/paymentSchedules.data.gql.dart'
+    show
+        GgetPaymentSchedulesData,
+        GgetPaymentSchedulesData_getPaymentSchedules,
+        GgetPaymentSchedulesData_getPaymentSchedules_borrower,
+        GgetPaymentSchedulesData_getPaymentSchedules_borrower_personalData;
+import 'package:solufacil_mobile/graphql/queries/__generated__/paymentSchedules.req.gql.dart'
+    show GgetPaymentSchedulesReq;
+import 'package:solufacil_mobile/graphql/queries/__generated__/paymentSchedules.var.gql.dart'
+    show GgetPaymentSchedulesVars;
 import 'package:solufacil_mobile/graphql/queries/__generated__/route.data.gql.dart'
     show GGetRoutesData, GGetRoutesData_getRoutes;
 import 'package:solufacil_mobile/graphql/queries/__generated__/route.req.gql.dart'
@@ -134,5 +162,23 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GSignUpReq,
   GSignUpVars,
   GUserCreateInput,
+  GgetEmployeeData,
+  GgetEmployeeData_getEmployee,
+  GgetEmployeeData_getEmployee_personalData,
+  GgetEmployeeData_getEmployee_personalData_addresses,
+  GgetEmployeeData_getEmployee_personalData_addresses_location,
+  GgetEmployeeData_getEmployee_personalData_addresses_location_municipality,
+  GgetEmployeeReq,
+  GgetEmployeeVars,
+  GgetPaymentSchedulesData,
+  GgetPaymentSchedulesData_getPaymentSchedules,
+  GgetPaymentSchedulesData_getPaymentSchedules_borrower,
+  GgetPaymentSchedulesData_getPaymentSchedules_borrower_personalData,
+  GgetPaymentSchedulesReq,
+  GgetPaymentSchedulesVars,
+  GpayPaymentData,
+  GpayPaymentData_payPayment,
+  GpayPaymentReq,
+  GpayPaymentVars,
 ])
 final Serializers serializers = _serializersBuilder.build();

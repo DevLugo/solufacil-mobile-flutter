@@ -61,6 +61,28 @@ Serializers _$serializers = (new Serializers().toBuilder()
       ..add(GSignUpReq.serializer)
       ..add(GSignUpVars.serializer)
       ..add(GUserCreateInput.serializer)
+      ..add(GgetEmployeeData.serializer)
+      ..add(GgetEmployeeData_getEmployee.serializer)
+      ..add(GgetEmployeeData_getEmployee_personalData.serializer)
+      ..add(GgetEmployeeData_getEmployee_personalData_addresses.serializer)
+      ..add(GgetEmployeeData_getEmployee_personalData_addresses_location
+          .serializer)
+      ..add(
+          GgetEmployeeData_getEmployee_personalData_addresses_location_municipality
+              .serializer)
+      ..add(GgetEmployeeReq.serializer)
+      ..add(GgetEmployeeVars.serializer)
+      ..add(GgetPaymentSchedulesData.serializer)
+      ..add(GgetPaymentSchedulesData_getPaymentSchedules.serializer)
+      ..add(GgetPaymentSchedulesData_getPaymentSchedules_borrower.serializer)
+      ..add(GgetPaymentSchedulesData_getPaymentSchedules_borrower_personalData
+          .serializer)
+      ..add(GgetPaymentSchedulesReq.serializer)
+      ..add(GgetPaymentSchedulesVars.serializer)
+      ..add(GpayPaymentData.serializer)
+      ..add(GpayPaymentData_payPayment.serializer)
+      ..add(GpayPaymentReq.serializer)
+      ..add(GpayPaymentVars.serializer)
       ..addBuilderFactory(
           const FullType(
               BuiltList, const [const FullType(GCreatePersonalDataInput)]),
@@ -93,7 +115,19 @@ Serializers _$serializers = (new Serializers().toBuilder()
           () => new ListBuilder<GLocationsData_locations_leads>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GPaymentState)]),
-          () => new ListBuilder<GPaymentState>()))
+          () => new ListBuilder<GPaymentState>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(GgetEmployeeData_getEmployee_personalData_addresses)
+          ]),
+          () => new ListBuilder<
+              GgetEmployeeData_getEmployee_personalData_addresses>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(GgetPaymentSchedulesData_getPaymentSchedules)
+          ]),
+          () =>
+              new ListBuilder<GgetPaymentSchedulesData_getPaymentSchedules>()))
     .build();
 
 // ignore_for_file: deprecated_member_use_from_same_package,type=lint

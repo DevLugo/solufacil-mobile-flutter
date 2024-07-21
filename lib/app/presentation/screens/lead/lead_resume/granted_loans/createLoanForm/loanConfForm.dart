@@ -5,13 +5,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/loan_types_cubit/loan_types_cubit.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/index.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/personalDataForm.dart';
 import 'package:solufacil_mobile/graphql/queries/__generated__/loan.data.gql.dart';
 
 class LoanConfForm extends StatefulWidget {
   final Function(String, dynamic, [int?]) onUpdate;
   final LoanConfState data;
+  final FormValidationFunction validateForm;
+  final bool isFormValid;
 
-  LoanConfForm({required this.onUpdate, required this.data});
+  LoanConfForm({
+    required this.onUpdate,
+    required this.data,
+    required this.validateForm,
+    required this.isFormValid,
+    });
 
   @override
   _LoanConfFormState createState() => _LoanConfFormState();
@@ -19,7 +27,6 @@ class LoanConfForm extends StatefulWidget {
 
 class _LoanConfFormState extends State<LoanConfForm> {
   final _formKey = GlobalKey<FormState>();
-  String? _loanType;
   double? _loanAmount;
   double? _loanGiven;
   double? _previousLoanPendingAmount;
@@ -28,6 +35,7 @@ class _LoanConfFormState extends State<LoanConfForm> {
   GGetLoanTypesData_getLoanTypes? selectedLoanType;
   TextEditingController signDateController = TextEditingController();
   TextEditingController firstPaymentDateController = TextEditingController();
+  bool _hasErrors = false;
 
   handleFetchLoanTypes() async {
     final loanTypesCubit = context.read<LoanTypesCubit>();
@@ -40,21 +48,36 @@ class _LoanConfFormState extends State<LoanConfForm> {
     handleFetchLoanTypes();
   }
 
-  @override
+  /* @override
   void didUpdateWidget(LoanConfForm oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.data.firstPaymentDate != null && widget.data.loanType != null && widget.data.requestedAmount != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-
-      //calculate total amount to pay and weeckly payment
       double totalAmountToPay = (widget.data.requestedAmount ?? 0) * (1 + (widget.data.loanType?.rate ?? 0));
       double weeklyPayment = totalAmountToPay / (widget.data.loanType?.weekDuration ?? 1);
-      widget.onUpdate('amountToPay', totalAmountToPay.toString());
-      widget.onUpdate('weeklyPayment', weeklyPayment.toString());
-          });
 
+      // Only update the state if the values have changed
+      if (totalAmountToPay.toString() != widget.data.amountToPay || weeklyPayment.toString() != widget.data.weeklyPayment) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          widget.onUpdate('amountToPay', totalAmountToPay.toString());
+          widget.onUpdate('weeklyPayment', weeklyPayment.toString());
+        });
+      }
     }
+  } */
+
+  void handleChanged(String fieldName, dynamic value, [int? index]) {
+    if (!widget.isFormValid) {
+      widget.validateForm(
+        _formKey,
+        (bool isValid) {
+          setState(() {
+            _hasErrors = !isValid;
+          });
+        },
+      );
+    }
+    widget.onUpdate(fieldName, value);
   }
 
   @override
@@ -63,7 +86,9 @@ class _LoanConfFormState extends State<LoanConfForm> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          //Text(widget.data.loanTypeId ?? 'No loan type selected'),
+          Text(widget.data.loanTypeId ?? 'No loan type selected'),
+          //show loanType as a json
+          Text(jsonEncode(widget.data)),
           if (widget.data.loanType == null && _formKey.currentState?.validate() == true)
             Text('Modalidad de Prestamo es requerido', style: TextStyle(color: Colors.red)),
           BlocBuilder<LoanTypesCubit, LoanTypesState>(
@@ -97,7 +122,7 @@ class _LoanConfFormState extends State<LoanConfForm> {
                             .loanTypes!
                             .firstWhere((loanType) => loanType.id == newValue);
                         if (selectedLoanType != null) {
-                          widget.onUpdate('loanType', selectedLoanType);
+                          handleChanged('loanType', selectedLoanType);
                         }
                       },
                     ),
@@ -180,6 +205,7 @@ class _LoanConfFormState extends State<LoanConfForm> {
               widget.onUpdate('givedAmount', value);
             },
           ),
+          Text(widget.data.signDate.toString() ?? 'No sign date'),
           TextFormField(
             controller: signDateController,
             decoration: InputDecoration(
@@ -191,7 +217,7 @@ class _LoanConfFormState extends State<LoanConfForm> {
             },
             
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (widget.data?.signDate == null) {
                 return 'Campo requerido';
               }
               return null;
@@ -206,7 +232,11 @@ class _LoanConfFormState extends State<LoanConfForm> {
               if (date != null) {
                 String formattedDate = DateFormat('yyyy-MM-dd').format(date);
                 signDateController.text = formattedDate;
-                widget.onUpdate('signDate', date.toIso8601String());
+                //widget.onUpdate('signDate', date.toIso8601String());
+                handleChanged('signDate', date.toIso8601String());
+                signDateController.value = signDateController.value.copyWith(
+                  text: formattedDate,
+                );
               }
             },
           ),
@@ -217,7 +247,7 @@ class _LoanConfFormState extends State<LoanConfForm> {
             ),
             readOnly: true,
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (widget.data.firstPaymentDate == null) {
                 return 'Campo requerido';
               }
               return null;
@@ -236,11 +266,17 @@ class _LoanConfFormState extends State<LoanConfForm> {
                 DateTime endDate = date.add(Duration(
                   days: ((widget.data.loanType?.weekDuration ?? 0) -1) * 7
                 ));
-                DateTime endDateInLocalTimezone = endDate.toLocal();
-                widget.onUpdate('endDate', endDateInLocalTimezone.toIso8601String());
+                //DateTime endDateInLocalTimezone = endDate.toLocal();
+                widget.onUpdate('endDate', endDate.toIso8601String());
               }
             },
           ),
+          Text(widget.data.requestedAmount!.toString()),
+          Text(widget.data.loanType?.name ?? 'No loan type selected'),
+          Text(widget.data.endDate.toString()),
+          Text(widget.data.weeklyPayment.toString()),
+          Text(widget.data.amountToPay.toString()),
+          Text(widget.data.firstPaymentDate.toString()),
           // Loan Resume Section
           if (widget.data.loanType != null &&
               widget.data.requestedAmount != null &&

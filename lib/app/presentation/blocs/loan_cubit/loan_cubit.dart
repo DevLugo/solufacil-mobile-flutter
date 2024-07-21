@@ -1,85 +1,153 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:solufacil_mobile/__generated__/schema.schema.gql.dart';
+import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/createLoanForm/index.dart';
 import 'package:solufacil_mobile/data/remote/client.dart';
+import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.data.gql.dart';
 import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.req.gql.dart';
 
-class LoanCubit extends Cubit<LoanState> {
-  LoanCubit() : super(LoanInitial());
+class LoanCubit extends Cubit<LoanCreationState> {
+  LoanCubit() : super(LoanCreationState(isSubmitting: false, status: LoanStatus.undefined, errorMessage: null));
 
   // Add your methods and business logic here
 
   //create a method for create loan request
   Future<void> createLoanRequest(
     BuildContext context,
-    GLoanCreateInput input,
+    LoanFormState input,
+    String locationId,
   ) async {
+    context.read<LoanCubit>().emit(LoanCreationState(isSubmitting: true, status: LoanStatus.undefined, errorMessage: null));
+
     initClient(context).then((client) {
+      try {
+        
+      
       final createLoanRq = GCreateLoanReq(
         (b) {
-          b.vars.input.amountGived = GDecimalBuilder()
-            ..value = input.amountGived.value;
+          b.vars.input.amountGived = input.loanConf?.givedAmount;
           b.vars.input.firstPaymentDate = GDateBuilder()
-            ..value = input.firstPaymentDate.value;
-          b.vars.input.signDate = GDateBuilder()..value = input.signDate?.value;
-          b.vars.input.loanTypeId = input.loanTypeId;
-          b.vars.input.loanLeadId = input.loanLeadId;
+            ..value = input.loanConf?.firstPaymentDate?.toIso8601String().split('T')[0];
+          b.vars.input.signDate = GDateBuilder()
+            ..value = input.loanConf?.signDate?.toIso8601String().split('T')[0];
+          b.vars.input.loanTypeId = input.loanConf?.loanTypeId;
+          b.vars.input.loanLeadId = input.leadId;
+          b.vars.input.isRenovation = false;
 
-          if (input.isRenovation == true) {
-            b.vars.input.borrowerId = input.borrowerId;
+          /* if (input.isRenovation == true) {
+            b.vars.input.borrowerId = input.borrowerId; */
+          if (false) {
+            b.vars.input.borrowerId = input.leadId;
           } else {
-            b.vars.input.borrower.replace(GBorrowerCreateInput((b) => b
-              ..email = input.borrower?.email
-              ..personalData.replace(GCreatePersonalDataInput((b) => b
-                ..firstName = input.borrower?.personalData?.firstName
-                ..lastName = input.borrower?.personalData?.lastName
-                ..curp = input.borrower?.personalData?.curp
-                ..adresses.replace([
-                  GCreateAddressInput((b) => b
-                    ..exteriorNumber = input
-                        .borrower?.personalData?.adresses?.first.exteriorNumber
-                    ..interiorNumber = input
-                        .borrower?.personalData?.adresses?.first.interiorNumber
-                    ..postalCode =
-                        input.borrower?.personalData?.adresses?.first.postalCode
-                    ..references =
-                        input.borrower?.personalData?.adresses?.first.references
-                    ..street =
-                        input.borrower?.personalData?.adresses?.first.street)
-                ])
-              ))
-            ));
-            b.vars.input.avals.replace([
-              GCreatePersonalDataInput((b) => b
-                ..firstName = input.avals?.first.firstName
-                ..lastName = input.avals?.first.lastName
-                ..curp = input.avals?.first.curp
-                ..adresses.replace([
-                  GCreateAddressInput((b) => b
-                    ..exteriorNumber = input.avals?.first.adresses?.first.exteriorNumber
-                    ..interiorNumber = input.avals?.first.adresses?.first.interiorNumber
-                    ..postalCode = input.avals?.first.adresses?.first.postalCode
-                    ..references = input.avals?.first.adresses?.first.references
-                    ..street = input.avals?.first.adresses?.first.street)
-                ])
-              )
-            ]);
+            try {
+              b.vars.input.borrower.replace(GBorrowerCreateInput((b) => b
+                ..email = input.client?.email
+                ..personalData.replace(GCreatePersonalDataInput((b) => b
+                  ..firstName = input.client?.firstName
+                  ..lastName = input.client?.lastName
+                  ..curp = input.client?.curp
+                  ..birthDate = (input.client?.birthDate != null) ? (GDateBuilder()..value = input.client!.birthDate!.toIso8601String().split('T')[0]) : null
+                  ..phones.replace([
+                    GCreatePhoneInput((b) => b
+                      ..number = "123123"
+                    )
+                  ])
+                  ..adresses.replace([
+                    GCreateAddressInput((b) => b
+                      ..exteriorNumber = input.client?.exteriorNumber
+                      ..interiorNumber = input.client?.internalNumber
+                      ..postalCode = input.client?.postalCode
+                      ..references = input.client?.references
+                      ..locationId = locationId
+                      ..street = input.client?.street)
+                  ])))));
+            } catch (e) {
+              print(e);
+            }
+            /* try {
+            
+            b.vars.input.avals.replace([GBorrowerCreateInput((b) => b
+  ..email = input.aval?.email
+  ..personalData.replace(GCreatePersonalDataInput((b) => b
+    ..firstName = input.aval?.firstName
+    ..lastName = input.aval?.lastName
+    ..curp = input.aval?.curp
+    ..adresses.replace([
+      GCreateAddressInput((b) => b
+        ..exteriorNumber = input.aval?.exteriorNumber
+        ..interiorNumber = input.aval?.internalNumber
+        ..postalCode = input.aval?.postalCode
+        ..references = input.aval?.references
+        ..street = input.aval?.street
+     )
+    ])
+  ))
+)]);
+            } catch (e) {
+              print(e);
+            } */
           }
-        },
-      );
-      client.request(createLoanRq).listen((response) {
-        if (response.data?.createLoan != null) {
-          //emit the response
-          //emit(response.data?.createLoan);
+        });
+        try{
+          final response = client.request(createLoanRq);
+          if (response != null) {
+            
+            response.first.then((value) {
+              if(value.hasErrors){
+                context.read<LoanCubit>().emit(LoanCreationState(isSubmitting: false, status: LoanStatus.failed, errorMessage: "value.errors.toString()"));
+              }else{
+                context.read<LoanCubit>().emit(LoanCreationState(isSubmitting: false, status: LoanStatus.succeed, errorMessage: null));
+              }
+            });
+          }else{
+            context.read<LoanCubit>().emit(LoanCreationState(isSubmitting: true, status: LoanStatus.failed, errorMessage: "TODO: Error"));
+          }
+              //final loanResponse = GCreateLoanData_createLoan.fromJson(response.first.toJson());
+
+          //return response as GCreateLoanData_createLoan;
+        }catch(error){
+          print(error);
+          return Future.error(error); // Return the error
         }
+        /* .listen((response) {
+          
+        }, onError: (e) {
+          // Handle network or other request errors
+          print("Request error: $e");
+          //emit(LoanErrorState(e.toString()));
+        }); */
+      } catch (e) {
+       print(e) ;
+      }
       
-      });
     });
   }
 }
+enum LoanStatus { undefined, succeed, failed }
 
-abstract class LoanState {}
+class LoanCreationState {
+  final bool isSubmitting;
+  final LoanStatus status;
+  final String? errorMessage; // Nullable to represent undefined state
 
-class LoanInitial extends LoanState {}
+  LoanCreationState({
+    required this.isSubmitting,
+    this.status = LoanStatus.undefined, // Default to undefined
+    this.errorMessage,
+  });
+
+  LoanCreationState copyWith({
+    bool? isSubmitting,
+    LoanStatus? status,
+    String? errorMessage,
+  }) {
+    return LoanCreationState(
+      isSubmitting: isSubmitting ?? this.isSubmitting,
+      status: status ?? this.status,
+      errorMessage: errorMessage, // Pass through, allowing it to be null (undefined)
+    );
+  }
+}
+
 
 // Add more state classes here as needed

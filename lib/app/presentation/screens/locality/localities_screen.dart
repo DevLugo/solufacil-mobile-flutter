@@ -44,10 +44,10 @@ class MyAppBarState extends State<MyAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    final localitiesScreenState = context.watch<LocalitiesScreenState>();
+    /* final localitiesScreenState = context.watch<LocalitiesScreenState>(); */
 
     return AppBar(
-      title: AnimatedCrossFade(
+      title: Text('Localidades'),/* AnimatedCrossFade(
         firstChild: const Text('Localidades'),
         secondChild: SearchLocalitiesInput(
           searchController: _searchController,
@@ -55,19 +55,19 @@ class MyAppBarState extends State<MyAppBar> {
         crossFadeState:
             _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
         duration: const Duration(milliseconds: 200),
-      ),
+      ), */
       actions: [
-        IconButton(
+        /* IconButton(
           icon: Icon(_isSearching ? Icons.close : Icons.search),
           onPressed: () {
-            setState(() {
+            /* setState(() {
               _isSearching = !_isSearching;
               if (!_isSearching) {
                 _searchController.clear();
               }
-            });
+            }); */
           },
-        ),
+        ), */
         TextButton.icon(
           icon: const Icon(Icons.map), // or Icons.directions
           label: Text(

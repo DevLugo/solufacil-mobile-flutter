@@ -399,7 +399,16 @@ const CreateAddressInput = _i1.InputObjectTypeDefinitionNode(
       directives: [],
       type: _i1.NamedTypeNode(
         name: _i1.NameNode(value: 'String'),
-        isNonNull: false,
+        isNonNull: true,
+      ),
+      defaultValue: null,
+    ),
+    _i1.InputValueDefinitionNode(
+      name: _i1.NameNode(value: 'locationId'),
+      directives: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'String'),
+        isNonNull: true,
       ),
       defaultValue: null,
     ),
@@ -408,7 +417,7 @@ const CreateAddressInput = _i1.InputObjectTypeDefinitionNode(
       directives: [],
       type: _i1.NamedTypeNode(
         name: _i1.NameNode(value: 'String'),
-        isNonNull: true,
+        isNonNull: false,
       ),
       defaultValue: null,
     ),
@@ -459,6 +468,15 @@ const CreatePersonalDataInput = _i1.InputObjectTypeDefinitionNode(
       directives: [],
       type: _i1.NamedTypeNode(
         name: _i1.NameNode(value: 'String'),
+        isNonNull: true,
+      ),
+      defaultValue: null,
+    ),
+    _i1.InputValueDefinitionNode(
+      name: _i1.NameNode(value: 'birthDate'),
+      directives: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'Date'),
         isNonNull: true,
       ),
       defaultValue: null,
@@ -930,7 +948,7 @@ const LoanCreateInput = _i1.InputObjectTypeDefinitionNode(
       name: _i1.NameNode(value: 'amountGived'),
       directives: [],
       type: _i1.NamedTypeNode(
-        name: _i1.NameNode(value: 'Decimal'),
+        name: _i1.NameNode(value: 'Float'),
         isNonNull: true,
       ),
       defaultValue: null,
