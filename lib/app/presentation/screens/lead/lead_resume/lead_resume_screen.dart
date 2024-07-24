@@ -17,8 +17,8 @@ class LeadResumeScreen extends StatefulWidget {
 
 DateTime _getNextMonday() {
   DateTime now = DateTime.now();
-  int daysToNextMonday = (8 - now.weekday) % 7;
-  return now.add(Duration(days: 1000));
+  int daysToNextMonday = (7 - now.weekday) % 7;
+  return now.add(Duration(days: daysToNextMonday));
 }
 
 
