@@ -79,6 +79,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
           .serializer)
       ..add(GgetPaymentSchedulesReq.serializer)
       ..add(GgetPaymentSchedulesVars.serializer)
+      ..add(GpayMultiplePaymentsData.serializer)
+      ..add(GpayMultiplePaymentsData_payMultiplePayments.serializer)
+      ..add(GpayMultiplePaymentsReq.serializer)
+      ..add(GpayMultiplePaymentsVars.serializer)
       ..add(GpayPaymentData.serializer)
       ..add(GpayPaymentData_payPayment.serializer)
       ..add(GpayPaymentReq.serializer)
@@ -114,6 +118,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
               const [const FullType(GLocationsData_locations_leads)]),
           () => new ListBuilder<GLocationsData_locations_leads>())
       ..addBuilderFactory(
+          const FullType(
+              BuiltList, const [const FullType(GPayLoanPaymentInput)]),
+          () => new ListBuilder<GPayLoanPaymentInput>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GPaymentState)]),
           () => new ListBuilder<GPaymentState>())
       ..addBuilderFactory(
@@ -126,8 +134,13 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [
             const FullType(GgetPaymentSchedulesData_getPaymentSchedules)
           ]),
+          () => new ListBuilder<GgetPaymentSchedulesData_getPaymentSchedules>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [
+            const FullType(GpayMultiplePaymentsData_payMultiplePayments)
+          ]),
           () =>
-              new ListBuilder<GgetPaymentSchedulesData_getPaymentSchedules>()))
+              new ListBuilder<GpayMultiplePaymentsData_payMultiplePayments>()))
     .build();
 
 // ignore_for_file: deprecated_member_use_from_same_package,type=lint

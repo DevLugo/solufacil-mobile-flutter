@@ -93,3 +93,85 @@ abstract class GpayPaymentReq
         json,
       );
 }
+
+abstract class GpayMultiplePaymentsReq
+    implements
+        Built<GpayMultiplePaymentsReq, GpayMultiplePaymentsReqBuilder>,
+        _i1.OperationRequest<_i2.GpayMultiplePaymentsData,
+            _i3.GpayMultiplePaymentsVars> {
+  GpayMultiplePaymentsReq._();
+
+  factory GpayMultiplePaymentsReq(
+          [void Function(GpayMultiplePaymentsReqBuilder b) updates]) =
+      _$GpayMultiplePaymentsReq;
+
+  static void _initializeBuilder(GpayMultiplePaymentsReqBuilder b) => b
+    ..operation = _i4.Operation(
+      document: _i5.document,
+      operationName: 'payMultiplePayments',
+    )
+    ..executeOnListen = true;
+
+  @override
+  _i3.GpayMultiplePaymentsVars get vars;
+  @override
+  _i4.Operation get operation;
+  @override
+  _i4.Request get execRequest => _i4.Request(
+        operation: operation,
+        variables: vars.toJson(),
+        context: context ?? const _i4.Context(),
+      );
+
+  @override
+  String? get requestId;
+  @override
+  @BuiltValueField(serialize: false)
+  _i2.GpayMultiplePaymentsData? Function(
+    _i2.GpayMultiplePaymentsData?,
+    _i2.GpayMultiplePaymentsData?,
+  )? get updateResult;
+  @override
+  _i2.GpayMultiplePaymentsData? get optimisticResponse;
+  @override
+  String? get updateCacheHandlerKey;
+  @override
+  Map<String, dynamic>? get updateCacheHandlerContext;
+  @override
+  _i1.FetchPolicy? get fetchPolicy;
+  @override
+  bool get executeOnListen;
+  @override
+  @BuiltValueField(serialize: false)
+  _i4.Context? get context;
+  @override
+  _i2.GpayMultiplePaymentsData? parseData(Map<String, dynamic> json) =>
+      _i2.GpayMultiplePaymentsData.fromJson(json);
+
+  @override
+  Map<String, dynamic> varsToJson() => vars.toJson();
+
+  @override
+  Map<String, dynamic> dataToJson(_i2.GpayMultiplePaymentsData data) =>
+      data.toJson();
+
+  @override
+  _i1.OperationRequest<_i2.GpayMultiplePaymentsData,
+      _i3.GpayMultiplePaymentsVars> transformOperation(
+          _i4.Operation Function(_i4.Operation) transform) =>
+      this.rebuild((b) => b..operation = transform(operation));
+
+  static Serializer<GpayMultiplePaymentsReq> get serializer =>
+      _$gpayMultiplePaymentsReqSerializer;
+
+  Map<String, dynamic> toJson() => (_i6.serializers.serializeWith(
+        GpayMultiplePaymentsReq.serializer,
+        this,
+      ) as Map<String, dynamic>);
+
+  static GpayMultiplePaymentsReq? fromJson(Map<String, dynamic> json) =>
+      _i6.serializers.deserializeWith(
+        GpayMultiplePaymentsReq.serializer,
+        json,
+      );
+}

@@ -1,6 +1,7 @@
 query getPaymentSchedules($where:PaymentScheduleWhereInput){
   getPaymentSchedules(where:$where){
     id
+    loanId
     numeration
     amountToPay
     pendingAmount

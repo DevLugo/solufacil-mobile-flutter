@@ -226,7 +226,7 @@ type Municipality {
 type Mutation {
   payPayment(input: PayLoanPaymentInput!): Loan!
   createLoan(input: LoanCreateInput!): Loan!
-  createLoanBulk(input: [LoanCreateInput!]!): [Loan!]!
+  payMultiplePayments(input: [PayLoanPaymentInput!]!): [Loan!]!
   signUp(input: UserCreateInput!): User!
   signIn(input: SignInInput!): SignInOutput!
 }

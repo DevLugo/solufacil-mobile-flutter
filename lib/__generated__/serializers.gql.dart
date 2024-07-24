@@ -51,11 +51,15 @@ import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.req.gql.da
 import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.var.gql.dart'
     show GCreateLoanVars;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/payment.data.gql.dart'
-    show GpayPaymentData, GpayPaymentData_payPayment;
+    show
+        GpayMultiplePaymentsData,
+        GpayMultiplePaymentsData_payMultiplePayments,
+        GpayPaymentData,
+        GpayPaymentData_payPayment;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/payment.req.gql.dart'
-    show GpayPaymentReq;
+    show GpayMultiplePaymentsReq, GpayPaymentReq;
 import 'package:solufacil_mobile/graphql/mutations/__generated__/payment.var.gql.dart'
-    show GpayPaymentVars;
+    show GpayMultiplePaymentsVars, GpayPaymentVars;
 import 'package:solufacil_mobile/graphql/queries/__generated__/employee.data.gql.dart'
     show
         GgetEmployeeData,
@@ -176,6 +180,10 @@ final SerializersBuilder _serializersBuilder = _$serializers.toBuilder()
   GgetPaymentSchedulesData_getPaymentSchedules_borrower_personalData,
   GgetPaymentSchedulesReq,
   GgetPaymentSchedulesVars,
+  GpayMultiplePaymentsData,
+  GpayMultiplePaymentsData_payMultiplePayments,
+  GpayMultiplePaymentsReq,
+  GpayMultiplePaymentsVars,
   GpayPaymentData,
   GpayPaymentData_payPayment,
   GpayPaymentReq,

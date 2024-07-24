@@ -1429,7 +1429,7 @@ const Mutation = _i1.ObjectTypeDefinitionNode(
       ),
     ),
     _i1.FieldDefinitionNode(
-      name: _i1.NameNode(value: 'createLoanBulk'),
+      name: _i1.NameNode(value: 'payMultiplePayments'),
       directives: [],
       args: [
         _i1.InputValueDefinitionNode(
@@ -1437,7 +1437,7 @@ const Mutation = _i1.ObjectTypeDefinitionNode(
           directives: [],
           type: _i1.ListTypeNode(
             type: _i1.NamedTypeNode(
-              name: _i1.NameNode(value: 'LoanCreateInput'),
+              name: _i1.NameNode(value: 'PayLoanPaymentInput'),
               isNonNull: true,
             ),
             isNonNull: true,

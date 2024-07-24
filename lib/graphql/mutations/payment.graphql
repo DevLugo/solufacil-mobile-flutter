@@ -5,3 +5,13 @@ mutation payPayment(
     id
   }
 }
+
+
+mutation payMultiplePayments(
+	$input: [PayLoanPaymentInput!]!
+){
+  payMultiplePayments(input: $input){
+    id
+  }
+  
+}

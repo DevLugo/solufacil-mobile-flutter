@@ -1,9 +1,13 @@
+import 'dart:core';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:solufacil_mobile/__generated__/schema.ast.gql.dart';
 import 'package:solufacil_mobile/__generated__/schema.schema.gql.dart';
 import 'package:solufacil_mobile/data/remote/client.dart';
+import 'package:solufacil_mobile/graphql/mutations/__generated__/payment.req.gql.dart';
+import 'package:solufacil_mobile/graphql/mutations/__generated__/payment.var.gql.dart';
 import 'package:solufacil_mobile/graphql/queries/__generated__/paymentSchedules.data.gql.dart';
 import 'package:solufacil_mobile/graphql/queries/__generated__/paymentSchedules.req.gql.dart';
 import 'package:built_collection/built_collection.dart';
@@ -25,11 +29,18 @@ class PaymentScheduleData {
 
 class ExtendedPaymentSchedule {
   final GgetPaymentSchedulesData_getPaymentSchedules original;
-  final double payedAmount;
+  double currentPaymentAmount;
+  bool isChecked = true;
+  int delayedPayments = 0;
+  double delayedAmount = 0;
+  
 
   ExtendedPaymentSchedule({
     required this.original,
-  }) : payedAmount = double.parse(original.amountToPay.value);
+    required this.delayedAmount,
+    required this.delayedPayments,
+  }) : 
+  currentPaymentAmount = double.parse(original.amountToPay.value);
 
   // You can add methods to access the original attributes if needed
   String get id => original.id;
@@ -42,7 +53,7 @@ class PaymentScheduleCubit extends Cubit<PaymentScheduleData> {
   PaymentScheduleCubit() : super(PaymentScheduleData(payments: [], requestStatus: PaymentScheduleState.initial));
   StreamSubscription? _subscription;
 
-Future<void> fetchPaymentSchedule(BuildContext context, String leadId, List<GPaymentState> paymentStates, GDateTime dueDate) async {
+  Future<void> fetchPaymentSchedule(BuildContext context, String leadId, List<GPaymentState> paymentStates, GDateTime dueDate) async {
     try {
       emit(PaymentScheduleData(payments: [], requestStatus: PaymentScheduleState.loading));
       final client = await initClient(context);
@@ -50,22 +61,53 @@ Future<void> fetchPaymentSchedule(BuildContext context, String leadId, List<GPay
         (b) {
           b.vars.where.leadId = leadId; // Replace with your actual lead ID
           b.vars.where.paymentState = ListBuilder<GPaymentState>(paymentStates);
-           b.vars.where.dueDate = GDateTimeBuilder()
-            ..value = DateFormat('yyyy-MM-dd').format(DateTime.parse(dueDate.value));
+          b.vars.where.dueDate = GDateTimeBuilder()
+          ..value = dueDate.value;
         },
       );
 
       _subscription = client.request(fetchPaymentScheduleReq).listen((response) {
         if (response.data?.getPaymentSchedules != null) {
-          // Assuming you have a way to convert GraphQL payment schedules to your Payment model
+          /* // Assuming you have a way to convert GraphQL payment schedules to your Payment model
           final payments = response.data!.getPaymentSchedules
               .map((schedule) => ExtendedPaymentSchedule(original: schedule))
               .toList();
               
-          emit(PaymentScheduleData(payments: payments, requestStatus: PaymentScheduleState.success));
+          emit(PaymentScheduleData(payments: payments, requestStatus: PaymentScheduleState.success)); */
+
+          final schedules = response.data!.getPaymentSchedules;
+
+        // Group by loanId
+        final Map<String, List<GgetPaymentSchedulesData_getPaymentSchedules>> groupedSchedules = {};
+        for (var schedule in schedules) {
+          final loanId = schedule.loanId;
+          if (!groupedSchedules.containsKey(loanId)) {
+            groupedSchedules[loanId] = [];
+          }
+          groupedSchedules[loanId]!.add(schedule);
+        }
+
+        // Process each group
+        final List<ExtendedPaymentSchedule> payments = [];
+        groupedSchedules.forEach((loanId, schedules) {
+          schedules.sort((a, b) => b.dueDate.value.compareTo(a.dueDate.value)); // Sort by due date descending
+          final latestSchedule = schedules.first;
+          
+          final delayedPayments = schedules.skip(1).fold(0, (sum, schedule) => sum + double.parse(schedule.amountToPay.value).toInt());
+          final delayedAmount = schedules.skip(1).fold(0.0, (sum, schedule) => sum + double.parse(schedule.amountToPay.value));
+
+          payments.add(ExtendedPaymentSchedule(
+            original: latestSchedule,
+            delayedPayments: delayedPayments,
+            delayedAmount: delayedAmount,
+          ));
+        });
+
+        emit(PaymentScheduleData(payments: payments, requestStatus: PaymentScheduleState.success));
 
           // Do something with the fetched payments
           // ...
+          
         } else {
           emit(PaymentScheduleData(payments: [], requestStatus: PaymentScheduleState.failure));
         }
@@ -76,6 +118,80 @@ Future<void> fetchPaymentSchedule(BuildContext context, String leadId, List<GPay
       emit(PaymentScheduleData(payments: [], requestStatus: PaymentScheduleState.failure));
     }
   }
+
+  double getCheckedPaymentsSum() {
+    return state.payments
+        .where((payment) => payment.isChecked ?? false)
+        .fold(0.0, (sum, payment) => sum + payment.currentPaymentAmount);
+  }
+
+  void togglePaymentChecked(int index, bool isChecked) {
+    final updatedPayments = List<ExtendedPaymentSchedule>.from(state.payments);
+    updatedPayments[index].isChecked = isChecked;
+    emit(PaymentScheduleData(payments: updatedPayments, requestStatus: state.requestStatus));
+  }
+
+  void updateCurrentPaymentByIdx(int index, double newAmount) {
+      final updatedPayments = List<ExtendedPaymentSchedule>.from(state.payments);
+      if (index >= 0 && index < updatedPayments.length) {
+        updatedPayments[index].currentPaymentAmount = newAmount;
+        emit(PaymentScheduleData(payments: updatedPayments, requestStatus: state.requestStatus));
+      }
+  }
+
+  Future<void> payMultiplePayments(BuildContext context, GDateTime paymentDate, String? levelId ) async {
+    /* final updatedPayments = List<ExtendedPaymentSchedule>.from(state.payments);
+    for (final payment in paymentIndexes) {
+      if (index >= 0 && index < updatedPayments.length) {
+        updatedPayments[index].isChecked = false;
+      }
+    } */
+    //emit(PaymentScheduleData(payments: updatedPayments, requestStatus: state.requestStatus));
+
+    final paymentsToPay = state.payments
+        .asMap()
+        .entries
+        .where((entry) => entry.value.isChecked)
+        .map((entry) => entry.value)
+        .toList();
+
+    final paymentIds = paymentsToPay.map((payment) => payment.id).toList();
+
+    // Make the GraphQL request to pay the selected payments
+    // Replace `yourMutation` with the actual mutation name from your GraphQL schema
+    
+    final payMultiplePaymentsReq = GpayMultiplePaymentsReq(
+      (b) {
+        b.vars.input = ListBuilder<GPayLoanPaymentInput>(
+          paymentsToPay.map(
+            (payment) => GPayLoanPaymentInput(
+              (b) {
+                b.amount = GDecimalBuilder()..value = payment.currentPaymentAmount.toString(); // Convert double to GDecimalBuilder
+                b.paidDate = GDateTimeBuilder()
+                  ..value = paymentDate.value;
+                b.loanId = payment.original.loanId; // Ensure loan getter is correctly accessed
+              },
+            ),
+          ).toList(), // Convert the iterable to a list
+        );
+      },
+    );
+
+    // Send the request and handle the response
+    final client = await initClient(context); // Add this line to initialize the client
+    final response = await client.request(payMultiplePaymentsReq).first;
+
+    /* client.request(payMultiplePaymentsReq).listen((response) {
+      // Handle the response here
+      // ...
+    }, onError: (error) {
+      // Handle the error here
+      // ...
+    }); */
+  }
+
+  
+
 
   @override
   Future<void> close() {

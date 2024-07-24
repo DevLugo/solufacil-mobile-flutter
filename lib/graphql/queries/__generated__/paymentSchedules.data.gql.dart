@@ -58,6 +58,7 @@ abstract class GgetPaymentSchedulesData_getPaymentSchedules
   @BuiltValueField(wireName: '__typename')
   String get G__typename;
   String get id;
+  String get loanId;
   int get numeration;
   _i2.GDecimal get amountToPay;
   _i2.GDecimal get pendingAmount;

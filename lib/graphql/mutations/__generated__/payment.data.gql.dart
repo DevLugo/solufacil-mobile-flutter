@@ -2,6 +2,7 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:solufacil_mobile/__generated__/serializers.gql.dart' as _i1;
@@ -62,6 +63,70 @@ abstract class GpayPaymentData_payPayment
   static GpayPaymentData_payPayment? fromJson(Map<String, dynamic> json) =>
       _i1.serializers.deserializeWith(
         GpayPaymentData_payPayment.serializer,
+        json,
+      );
+}
+
+abstract class GpayMultiplePaymentsData
+    implements
+        Built<GpayMultiplePaymentsData, GpayMultiplePaymentsDataBuilder> {
+  GpayMultiplePaymentsData._();
+
+  factory GpayMultiplePaymentsData(
+          [void Function(GpayMultiplePaymentsDataBuilder b) updates]) =
+      _$GpayMultiplePaymentsData;
+
+  static void _initializeBuilder(GpayMultiplePaymentsDataBuilder b) =>
+      b..G__typename = 'Mutation';
+
+  @BuiltValueField(wireName: '__typename')
+  String get G__typename;
+  BuiltList<GpayMultiplePaymentsData_payMultiplePayments>
+      get payMultiplePayments;
+  static Serializer<GpayMultiplePaymentsData> get serializer =>
+      _$gpayMultiplePaymentsDataSerializer;
+
+  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
+        GpayMultiplePaymentsData.serializer,
+        this,
+      ) as Map<String, dynamic>);
+
+  static GpayMultiplePaymentsData? fromJson(Map<String, dynamic> json) =>
+      _i1.serializers.deserializeWith(
+        GpayMultiplePaymentsData.serializer,
+        json,
+      );
+}
+
+abstract class GpayMultiplePaymentsData_payMultiplePayments
+    implements
+        Built<GpayMultiplePaymentsData_payMultiplePayments,
+            GpayMultiplePaymentsData_payMultiplePaymentsBuilder> {
+  GpayMultiplePaymentsData_payMultiplePayments._();
+
+  factory GpayMultiplePaymentsData_payMultiplePayments(
+      [void Function(GpayMultiplePaymentsData_payMultiplePaymentsBuilder b)
+          updates]) = _$GpayMultiplePaymentsData_payMultiplePayments;
+
+  static void _initializeBuilder(
+          GpayMultiplePaymentsData_payMultiplePaymentsBuilder b) =>
+      b..G__typename = 'Loan';
+
+  @BuiltValueField(wireName: '__typename')
+  String get G__typename;
+  String get id;
+  static Serializer<GpayMultiplePaymentsData_payMultiplePayments>
+      get serializer => _$gpayMultiplePaymentsDataPayMultiplePaymentsSerializer;
+
+  Map<String, dynamic> toJson() => (_i1.serializers.serializeWith(
+        GpayMultiplePaymentsData_payMultiplePayments.serializer,
+        this,
+      ) as Map<String, dynamic>);
+
+  static GpayMultiplePaymentsData_payMultiplePayments? fromJson(
+          Map<String, dynamic> json) =>
+      _i1.serializers.deserializeWith(
+        GpayMultiplePaymentsData_payMultiplePayments.serializer,
         json,
       );
 }

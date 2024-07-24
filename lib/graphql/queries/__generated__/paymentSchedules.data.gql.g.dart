@@ -96,6 +96,9 @@ class _$GgetPaymentSchedulesData_getPaymentSchedulesSerializer
           specifiedType: const FullType(String)),
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
+      'loanId',
+      serializers.serialize(object.loanId,
+          specifiedType: const FullType(String)),
       'numeration',
       serializers.serialize(object.numeration,
           specifiedType: const FullType(int)),
@@ -163,6 +166,10 @@ class _$GgetPaymentSchedulesData_getPaymentSchedulesSerializer
           break;
         case 'id':
           result.id = serializers.deserialize(value,
+              specifiedType: const FullType(String))! as String;
+          break;
+        case 'loanId':
+          result.loanId = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
         case 'numeration':
@@ -483,6 +490,8 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
   @override
   final String id;
   @override
+  final String loanId;
+  @override
   final int numeration;
   @override
   final _i2.GDecimal amountToPay;
@@ -519,6 +528,7 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
   _$GgetPaymentSchedulesData_getPaymentSchedules._(
       {required this.G__typename,
       required this.id,
+      required this.loanId,
       required this.numeration,
       required this.amountToPay,
       required this.pendingAmount,
@@ -537,6 +547,8 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
         r'GgetPaymentSchedulesData_getPaymentSchedules', 'G__typename');
     BuiltValueNullFieldError.checkNotNull(
         id, r'GgetPaymentSchedulesData_getPaymentSchedules', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        loanId, r'GgetPaymentSchedulesData_getPaymentSchedules', 'loanId');
     BuiltValueNullFieldError.checkNotNull(numeration,
         r'GgetPaymentSchedulesData_getPaymentSchedules', 'numeration');
     BuiltValueNullFieldError.checkNotNull(amountToPay,
@@ -579,6 +591,7 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
     return other is GgetPaymentSchedulesData_getPaymentSchedules &&
         G__typename == other.G__typename &&
         id == other.id &&
+        loanId == other.loanId &&
         numeration == other.numeration &&
         amountToPay == other.amountToPay &&
         pendingAmount == other.pendingAmount &&
@@ -599,6 +612,7 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
     var _$hash = 0;
     _$hash = $jc(_$hash, G__typename.hashCode);
     _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, loanId.hashCode);
     _$hash = $jc(_$hash, numeration.hashCode);
     _$hash = $jc(_$hash, amountToPay.hashCode);
     _$hash = $jc(_$hash, pendingAmount.hashCode);
@@ -622,6 +636,7 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
             r'GgetPaymentSchedulesData_getPaymentSchedules')
           ..add('G__typename', G__typename)
           ..add('id', id)
+          ..add('loanId', loanId)
           ..add('numeration', numeration)
           ..add('amountToPay', amountToPay)
           ..add('pendingAmount', pendingAmount)
@@ -652,6 +667,10 @@ class GgetPaymentSchedulesData_getPaymentSchedulesBuilder
   String? _id;
   String? get id => _$this._id;
   set id(String? id) => _$this._id = id;
+
+  String? _loanId;
+  String? get loanId => _$this._loanId;
+  set loanId(String? loanId) => _$this._loanId = loanId;
 
   int? _numeration;
   int? get numeration => _$this._numeration;
@@ -733,6 +752,7 @@ class GgetPaymentSchedulesData_getPaymentSchedulesBuilder
     if ($v != null) {
       _G__typename = $v.G__typename;
       _id = $v.id;
+      _loanId = $v.loanId;
       _numeration = $v.numeration;
       _amountToPay = $v.amountToPay.toBuilder();
       _pendingAmount = $v.pendingAmount.toBuilder();
@@ -778,6 +798,8 @@ class GgetPaymentSchedulesData_getPaymentSchedulesBuilder
                   'G__typename'),
               id: BuiltValueNullFieldError.checkNotNull(
                   id, r'GgetPaymentSchedulesData_getPaymentSchedules', 'id'),
+              loanId: BuiltValueNullFieldError.checkNotNull(
+                  loanId, r'GgetPaymentSchedulesData_getPaymentSchedules', 'loanId'),
               numeration: BuiltValueNullFieldError.checkNotNull(
                   numeration,
                   r'GgetPaymentSchedulesData_getPaymentSchedules',
@@ -787,11 +809,11 @@ class GgetPaymentSchedulesData_getPaymentSchedulesBuilder
               paidAmount: paidAmount.build(),
               returnToCapital: returnToCapital.build(),
               profit: profit.build(),
-              status: BuiltValueNullFieldError.checkNotNull(status,
-                  r'GgetPaymentSchedulesData_getPaymentSchedules', 'status'),
+              status: BuiltValueNullFieldError.checkNotNull(
+                  status, r'GgetPaymentSchedulesData_getPaymentSchedules', 'status'),
               details: details,
-              delayed: BuiltValueNullFieldError.checkNotNull(delayed,
-                  r'GgetPaymentSchedulesData_getPaymentSchedules', 'delayed'),
+              delayed: BuiltValueNullFieldError.checkNotNull(
+                  delayed, r'GgetPaymentSchedulesData_getPaymentSchedules', 'delayed'),
               dueDate: dueDate.build(),
               createdAt: createdAt.build(),
               updatedAt: updatedAt.build(),
