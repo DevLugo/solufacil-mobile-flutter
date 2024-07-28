@@ -20,6 +20,12 @@ const specifiedBy = _i1.DirectiveDefinitionNode(
   locations: [_i1.DirectiveLocation.scalar],
   repeatable: false,
 );
+const oneOf = _i1.DirectiveDefinitionNode(
+  name: _i1.NameNode(value: 'oneOf'),
+  args: [],
+  locations: [_i1.DirectiveLocation.inputObject],
+  repeatable: false,
+);
 const Address = _i1.ObjectTypeDefinitionNode(
   name: _i1.NameNode(value: 'Address'),
   directives: [],
@@ -891,7 +897,7 @@ const LoanCreateInput = _i1.InputObjectTypeDefinitionNode(
       name: _i1.NameNode(value: 'firstPaymentDate'),
       directives: [],
       type: _i1.NamedTypeNode(
-        name: _i1.NameNode(value: 'Date'),
+        name: _i1.NameNode(value: 'DateTime'),
         isNonNull: true,
       ),
       defaultValue: null,
@@ -966,7 +972,7 @@ const LoanCreateInput = _i1.InputObjectTypeDefinitionNode(
       name: _i1.NameNode(value: 'signDate'),
       directives: [],
       type: _i1.NamedTypeNode(
-        name: _i1.NameNode(value: 'Date'),
+        name: _i1.NameNode(value: 'DateTime'),
         isNonNull: false,
       ),
       defaultValue: null,
@@ -1658,6 +1664,15 @@ const PaymentSchedule = _i1.ObjectTypeDefinitionNode(
       ),
     ),
     _i1.FieldDefinitionNode(
+      name: _i1.NameNode(value: 'weecklyPendingAmount'),
+      directives: [],
+      args: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'Decimal'),
+        isNonNull: true,
+      ),
+    ),
+    _i1.FieldDefinitionNode(
       name: _i1.NameNode(value: 'borrower'),
       directives: [],
       args: [],
@@ -1686,7 +1701,16 @@ const PaymentScheduleWhereInput = _i1.InputObjectTypeDefinitionNode(
       directives: [],
       type: _i1.NamedTypeNode(
         name: _i1.NameNode(value: 'DateTime'),
-        isNonNull: false,
+        isNonNull: true,
+      ),
+      defaultValue: null,
+    ),
+    _i1.InputValueDefinitionNode(
+      name: _i1.NameNode(value: 'startDate'),
+      directives: [],
+      type: _i1.NamedTypeNode(
+        name: _i1.NameNode(value: 'DateTime'),
+        isNonNull: true,
       ),
       defaultValue: null,
     ),
@@ -2309,6 +2333,7 @@ const UserCreateInput = _i1.InputObjectTypeDefinitionNode(
 );
 const document = _i1.DocumentNode(definitions: [
   specifiedBy,
+  oneOf,
   Address,
   Borrower,
   BorrowerCreateInput,

@@ -14,6 +14,7 @@ query getPaymentSchedules($where:PaymentScheduleWhereInput){
     dueDate
     createdAt
     updatedAt
+    weecklyPendingAmount
   	borrower{
       id
       personalData {

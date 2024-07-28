@@ -281,7 +281,7 @@ abstract class GLoanCreateInput
   factory GLoanCreateInput([void Function(GLoanCreateInputBuilder b) updates]) =
       _$GLoanCreateInput;
 
-  GDate get firstPaymentDate;
+  GDateTime get firstPaymentDate;
   bool get isRenovation;
   String? get borrowerId;
   GBorrowerCreateInput? get borrower;
@@ -289,7 +289,7 @@ abstract class GLoanCreateInput
   String get loanLeadId;
   double get amountGived;
   String get loanTypeId;
-  GDate? get signDate;
+  GDateTime? get signDate;
   static Serializer<GLoanCreateInput> get serializer =>
       _$gLoanCreateInputSerializer;
 
@@ -412,7 +412,8 @@ abstract class GPaymentScheduleWhereInput
       _$GPaymentScheduleWhereInput;
 
   String? get leadId;
-  GDateTime? get dueDate;
+  GDateTime get dueDate;
+  GDateTime get startDate;
   BuiltList<GPaymentState>? get paymentState;
   static Serializer<GPaymentScheduleWhereInput> get serializer =>
       _$gPaymentScheduleWhereInputSerializer;

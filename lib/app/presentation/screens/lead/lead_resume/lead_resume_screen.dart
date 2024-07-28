@@ -5,6 +5,9 @@ import 'package:solufacil_mobile/app/presentation/blocs/location_cubit/location_
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/granted_loans/granted_loans.dart';
 import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/weekly_payments/weekly_payments.dart';
 import 'package:solufacil_mobile/app/presentation/screens/shared/drawer_menu/drawer_menu.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/intl.dart';
 
 class LeadResumeScreen extends StatefulWidget {
   final String leadId;
@@ -15,10 +18,10 @@ class LeadResumeScreen extends StatefulWidget {
   _LeadResumeScreenState createState() => _LeadResumeScreenState();
 }
 
-DateTime _getNextMonday() {
-  DateTime now = DateTime.now();
-  int daysToNextMonday = (7 - now.weekday) % 7;
-  return now.add(Duration(days: daysToNextMonday));
+DateTime _getNextSundayLastMinute() {
+  final now = DateTime.now();
+  final nextSunday = now.add(Duration(days: DateTime.sunday - now.weekday));
+  return DateTime(nextSunday.year, nextSunday.month, nextSunday.day, 23, 59, 59);
 }
 
 
@@ -96,7 +99,7 @@ class _LeadResumeScreenState extends State<LeadResumeScreen>
             //add the following parameters to the WeeklyPaymentsComponent component, borrowerId, startDate, endDate
             WeeklyPaymentsComponent(
               borrowerId: widget.leadId,
-              dueDate: _getNextMonday(),
+              dueDate: _getNextSundayLastMinute(),
             ),
             GrantedLoansScreen(
               loans: List<Loan>.generate(

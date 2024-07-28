@@ -130,6 +130,13 @@ const getPaymentSchedules = _i1.OperationDefinitionNode(
           selectionSet: null,
         ),
         _i1.FieldNode(
+          name: _i1.NameNode(value: 'weecklyPendingAmount'),
+          alias: null,
+          arguments: [],
+          directives: [],
+          selectionSet: null,
+        ),
+        _i1.FieldNode(
           name: _i1.NameNode(value: 'borrower'),
           alias: null,
           arguments: [],

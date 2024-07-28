@@ -45,7 +45,7 @@ Future<Client> initClient(BuildContext context) async {
   final cache = Cache(store: store, possibleTypes: possibleTypesMap);
 
   //final httpLink = HttpLink('https://solufacil-graphql.onrender.com/graphql');
-  final httpLink = HttpLink('http://192.168.1.65:4000/graphql');
+  final httpLink = HttpLink('http://192.168.1.66:4000/graphql');
   //final httpLink = HttpLink('http://127.0.0.1:4000/graphql');
 
   

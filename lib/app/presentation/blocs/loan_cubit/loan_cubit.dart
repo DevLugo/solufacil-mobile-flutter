@@ -5,9 +5,18 @@ import 'package:solufacil_mobile/app/presentation/screens/lead/lead_resume/grant
 import 'package:solufacil_mobile/data/remote/client.dart';
 import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.data.gql.dart';
 import 'package:solufacil_mobile/graphql/mutations/__generated__/loan.req.gql.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/intl.dart';
+
+// Initialize time zone data
 
 class LoanCubit extends Cubit<LoanCreationState> {
-  LoanCubit() : super(LoanCreationState(isSubmitting: false, status: LoanStatus.undefined, errorMessage: null));
+  LoanCubit() : super(LoanCreationState(isSubmitting: false, status: LoanStatus.undefined, errorMessage: null)) {
+    tz.initializeTimeZones();
+  }
+
+
 
   // Add your methods and business logic here
 
@@ -21,15 +30,22 @@ class LoanCubit extends Cubit<LoanCreationState> {
 
     initClient(context).then((client) {
       try {
-        
-      
+  final mexicoCity = tz.getLocation('America/Mexico_City'); // Use the correct location name
+
+      final firstPaymentDateMexico = input.loanConf?.firstPaymentDate != null
+          ? tz.TZDateTime.from(input.loanConf!.firstPaymentDate!, mexicoCity).toIso8601String()
+          : null;
+      final signDateMexico = input.loanConf?.signDate != null
+    ? tz.TZDateTime.from(input.loanConf!.signDate!, mexicoCity).toIso8601String()
+    : null;
+
       final createLoanRq = GCreateLoanReq(
         (b) {
           b.vars.input.amountGived = input.loanConf?.givedAmount;
-          b.vars.input.firstPaymentDate = GDateBuilder()
-            ..value = input.loanConf?.firstPaymentDate?.toIso8601String().split('T')[0];
-          b.vars.input.signDate = GDateBuilder()
-            ..value = input.loanConf?.signDate?.toIso8601String().split('T')[0];
+          b.vars.input.firstPaymentDate = GDateTimeBuilder()
+            ..value = firstPaymentDateMexico;
+          b.vars.input.signDate = GDateTimeBuilder()
+            ..value = signDateMexico;
           b.vars.input.loanTypeId = input.loanConf?.loanTypeId;
           b.vars.input.loanLeadId = input.leadId;
           b.vars.input.isRenovation = false;
@@ -149,5 +165,3 @@ class LoanCreationState {
   }
 }
 
-
-// Add more state classes here as needed

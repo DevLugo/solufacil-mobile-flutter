@@ -71,6 +71,7 @@ abstract class GgetPaymentSchedulesData_getPaymentSchedules
   _i2.GDateTime get dueDate;
   _i2.GDateTime get createdAt;
   _i2.GDateTime get updatedAt;
+  _i2.GDecimal get weecklyPendingAmount;
   GgetPaymentSchedulesData_getPaymentSchedules_borrower get borrower;
   static Serializer<GgetPaymentSchedulesData_getPaymentSchedules>
       get serializer => _$ggetPaymentSchedulesDataGetPaymentSchedulesSerializer;

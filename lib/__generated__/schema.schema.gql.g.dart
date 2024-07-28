@@ -634,7 +634,7 @@ class _$GLoanCreateInputSerializer
     final result = <Object?>[
       'firstPaymentDate',
       serializers.serialize(object.firstPaymentDate,
-          specifiedType: const FullType(GDate)),
+          specifiedType: const FullType(GDateTime)),
       'isRenovation',
       serializers.serialize(object.isRenovation,
           specifiedType: const FullType(bool)),
@@ -675,8 +675,8 @@ class _$GLoanCreateInputSerializer
     if (value != null) {
       result
         ..add('signDate')
-        ..add(
-            serializers.serialize(value, specifiedType: const FullType(GDate)));
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(GDateTime)));
     }
     return result;
   }
@@ -695,7 +695,7 @@ class _$GLoanCreateInputSerializer
       switch (key) {
         case 'firstPaymentDate':
           result.firstPaymentDate.replace(serializers.deserialize(value,
-              specifiedType: const FullType(GDate))! as GDate);
+              specifiedType: const FullType(GDateTime))! as GDateTime);
           break;
         case 'isRenovation':
           result.isRenovation = serializers.deserialize(value,
@@ -730,7 +730,7 @@ class _$GLoanCreateInputSerializer
           break;
         case 'signDate':
           result.signDate.replace(serializers.deserialize(value,
-              specifiedType: const FullType(GDate))! as GDate);
+              specifiedType: const FullType(GDateTime))! as GDateTime);
           break;
       }
     }
@@ -937,7 +937,14 @@ class _$GPaymentScheduleWhereInputSerializer
   Iterable<Object?> serialize(
       Serializers serializers, GPaymentScheduleWhereInput object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object?>[];
+    final result = <Object?>[
+      'dueDate',
+      serializers.serialize(object.dueDate,
+          specifiedType: const FullType(GDateTime)),
+      'startDate',
+      serializers.serialize(object.startDate,
+          specifiedType: const FullType(GDateTime)),
+    ];
     Object? value;
     value = object.leadId;
     if (value != null) {
@@ -945,13 +952,6 @@ class _$GPaymentScheduleWhereInputSerializer
         ..add('leadId')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
-    }
-    value = object.dueDate;
-    if (value != null) {
-      result
-        ..add('dueDate')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(GDateTime)));
     }
     value = object.paymentState;
     if (value != null) {
@@ -982,6 +982,10 @@ class _$GPaymentScheduleWhereInputSerializer
           break;
         case 'dueDate':
           result.dueDate.replace(serializers.deserialize(value,
+              specifiedType: const FullType(GDateTime))! as GDateTime);
+          break;
+        case 'startDate':
+          result.startDate.replace(serializers.deserialize(value,
               specifiedType: const FullType(GDateTime))! as GDateTime);
           break;
         case 'paymentState':
@@ -2312,7 +2316,7 @@ class GLoanByBorrowerWhereUniqueInputBuilder
 
 class _$GLoanCreateInput extends GLoanCreateInput {
   @override
-  final GDate firstPaymentDate;
+  final GDateTime firstPaymentDate;
   @override
   final bool isRenovation;
   @override
@@ -2328,7 +2332,7 @@ class _$GLoanCreateInput extends GLoanCreateInput {
   @override
   final String loanTypeId;
   @override
-  final GDate? signDate;
+  final GDateTime? signDate;
 
   factory _$GLoanCreateInput(
           [void Function(GLoanCreateInputBuilder)? updates]) =>
@@ -2416,10 +2420,10 @@ class GLoanCreateInputBuilder
     implements Builder<GLoanCreateInput, GLoanCreateInputBuilder> {
   _$GLoanCreateInput? _$v;
 
-  GDateBuilder? _firstPaymentDate;
-  GDateBuilder get firstPaymentDate =>
-      _$this._firstPaymentDate ??= new GDateBuilder();
-  set firstPaymentDate(GDateBuilder? firstPaymentDate) =>
+  GDateTimeBuilder? _firstPaymentDate;
+  GDateTimeBuilder get firstPaymentDate =>
+      _$this._firstPaymentDate ??= new GDateTimeBuilder();
+  set firstPaymentDate(GDateTimeBuilder? firstPaymentDate) =>
       _$this._firstPaymentDate = firstPaymentDate;
 
   bool? _isRenovation;
@@ -2454,9 +2458,9 @@ class GLoanCreateInputBuilder
   String? get loanTypeId => _$this._loanTypeId;
   set loanTypeId(String? loanTypeId) => _$this._loanTypeId = loanTypeId;
 
-  GDateBuilder? _signDate;
-  GDateBuilder get signDate => _$this._signDate ??= new GDateBuilder();
-  set signDate(GDateBuilder? signDate) => _$this._signDate = signDate;
+  GDateTimeBuilder? _signDate;
+  GDateTimeBuilder get signDate => _$this._signDate ??= new GDateTimeBuilder();
+  set signDate(GDateTimeBuilder? signDate) => _$this._signDate = signDate;
 
   GLoanCreateInputBuilder();
 
@@ -2850,7 +2854,9 @@ class _$GPaymentScheduleWhereInput extends GPaymentScheduleWhereInput {
   @override
   final String? leadId;
   @override
-  final GDateTime? dueDate;
+  final GDateTime dueDate;
+  @override
+  final GDateTime startDate;
   @override
   final BuiltList<GPaymentState>? paymentState;
 
@@ -2858,8 +2864,17 @@ class _$GPaymentScheduleWhereInput extends GPaymentScheduleWhereInput {
           [void Function(GPaymentScheduleWhereInputBuilder)? updates]) =>
       (new GPaymentScheduleWhereInputBuilder()..update(updates))._build();
 
-  _$GPaymentScheduleWhereInput._({this.leadId, this.dueDate, this.paymentState})
-      : super._();
+  _$GPaymentScheduleWhereInput._(
+      {this.leadId,
+      required this.dueDate,
+      required this.startDate,
+      this.paymentState})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        dueDate, r'GPaymentScheduleWhereInput', 'dueDate');
+    BuiltValueNullFieldError.checkNotNull(
+        startDate, r'GPaymentScheduleWhereInput', 'startDate');
+  }
 
   @override
   GPaymentScheduleWhereInput rebuild(
@@ -2876,6 +2891,7 @@ class _$GPaymentScheduleWhereInput extends GPaymentScheduleWhereInput {
     return other is GPaymentScheduleWhereInput &&
         leadId == other.leadId &&
         dueDate == other.dueDate &&
+        startDate == other.startDate &&
         paymentState == other.paymentState;
   }
 
@@ -2884,6 +2900,7 @@ class _$GPaymentScheduleWhereInput extends GPaymentScheduleWhereInput {
     var _$hash = 0;
     _$hash = $jc(_$hash, leadId.hashCode);
     _$hash = $jc(_$hash, dueDate.hashCode);
+    _$hash = $jc(_$hash, startDate.hashCode);
     _$hash = $jc(_$hash, paymentState.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -2894,6 +2911,7 @@ class _$GPaymentScheduleWhereInput extends GPaymentScheduleWhereInput {
     return (newBuiltValueToStringHelper(r'GPaymentScheduleWhereInput')
           ..add('leadId', leadId)
           ..add('dueDate', dueDate)
+          ..add('startDate', startDate)
           ..add('paymentState', paymentState))
         .toString();
   }
@@ -2912,6 +2930,11 @@ class GPaymentScheduleWhereInputBuilder
   GDateTimeBuilder get dueDate => _$this._dueDate ??= new GDateTimeBuilder();
   set dueDate(GDateTimeBuilder? dueDate) => _$this._dueDate = dueDate;
 
+  GDateTimeBuilder? _startDate;
+  GDateTimeBuilder get startDate =>
+      _$this._startDate ??= new GDateTimeBuilder();
+  set startDate(GDateTimeBuilder? startDate) => _$this._startDate = startDate;
+
   ListBuilder<GPaymentState>? _paymentState;
   ListBuilder<GPaymentState> get paymentState =>
       _$this._paymentState ??= new ListBuilder<GPaymentState>();
@@ -2924,7 +2947,8 @@ class GPaymentScheduleWhereInputBuilder
     final $v = _$v;
     if ($v != null) {
       _leadId = $v.leadId;
-      _dueDate = $v.dueDate?.toBuilder();
+      _dueDate = $v.dueDate.toBuilder();
+      _startDate = $v.startDate.toBuilder();
       _paymentState = $v.paymentState?.toBuilder();
       _$v = null;
     }
@@ -2951,13 +2975,16 @@ class GPaymentScheduleWhereInputBuilder
       _$result = _$v ??
           new _$GPaymentScheduleWhereInput._(
               leadId: leadId,
-              dueDate: _dueDate?.build(),
+              dueDate: dueDate.build(),
+              startDate: startDate.build(),
               paymentState: _paymentState?.build());
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'dueDate';
-        _dueDate?.build();
+        dueDate.build();
+        _$failedField = 'startDate';
+        startDate.build();
         _$failedField = 'paymentState';
         _paymentState?.build();
       } catch (e) {

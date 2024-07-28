@@ -4,6 +4,11 @@ directive @specifiedBy(
   url: String!
 ) on SCALAR
 
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
 type Address {
   id: ID!
   street: String!
@@ -148,7 +153,7 @@ input LoanByBorrowerWhereUniqueInput {
 }
 
 input LoanCreateInput {
-  firstPaymentDate: Date!
+  firstPaymentDate: DateTime!
   isRenovation: Boolean!
   borrowerId: String
   borrower: BorrowerCreateInput
@@ -156,7 +161,7 @@ input LoanCreateInput {
   loanLeadId: String!
   amountGived: Float!
   loanTypeId: String!
-  signDate: Date
+  signDate: DateTime
 }
 
 type LoanPayment {
@@ -252,12 +257,14 @@ type PaymentSchedule {
   updatedAt: DateTime!
   loanId: String!
   pendingAmount: Decimal!
+  weecklyPendingAmount: Decimal!
   borrower: Borrower!
 }
 
 input PaymentScheduleWhereInput {
   leadId: String
-  dueDate: DateTime
+  dueDate: DateTime!
+  startDate: DateTime!
   paymentState: [PaymentState!]
 }
 

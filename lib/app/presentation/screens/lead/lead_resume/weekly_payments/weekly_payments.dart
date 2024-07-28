@@ -6,6 +6,10 @@ import 'package:shimmer/shimmer.dart';
 import 'package:solufacil_mobile/__generated__/schema.schema.gql.dart';
 import 'package:solufacil_mobile/app/presentation/blocs/paymentSchedule_cubit/payment_schedule_cubit.dart';
 import 'package:solufacil_mobile/graphql/queries/__generated__/paymentSchedules.data.gql.dart';
+import 'package:flutter_switch/flutter_switch.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/intl.dart';
 
 class WeeklyPaymentsComponent extends StatefulWidget {
   final String borrowerId;
@@ -28,12 +32,21 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
   bool payCommission = false; // State of payCommission
   int _selectedPaymentMethod = 0; // 0 for Efectivo, 1 for Transferencia
   List<bool> _selectedPayments = [];
+  int _selectedToggleIndex = 0;
+  bool _onlyCurrentWeek = false;
+  DateTime startDate = DateTime(2022, 1, 1);
 
   @override
   void dispose() {
     _controller?.dispose();
     //_focusNode?.dispose();
     super.dispose();
+  }
+
+  DateTime getMondayOfCurrentWeekMidnight() {
+    final now = DateTime.now();
+    final monday = now.subtract(Duration(days: now.weekday - 1));
+    return DateTime(monday.year, monday.month, monday.day, 0, 0, 0);
   }
 
   void _startEditing(int index, double currentAmount) {
@@ -66,6 +79,10 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
     super.initState();
 
     // Call fetchPaymentSchedule when the widget is initialized
+    fetchPaymentSchedules();
+  }
+
+  void fetchPaymentSchedules() {
     context.read<PaymentScheduleCubit>().fetchPaymentSchedule(
           context,
           widget.borrowerId,
@@ -74,7 +91,9 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
             GPaymentState.PENDING,
             //GPaymentState.PAID_OUT
           ],
-          GDateTime(widget.dueDate.toIso8601String()), // Corrected line
+          GDateTime(startDate.toIso8601String()),
+          GDateTime(widget.dueDate.toIso8601String()),
+          _onlyCurrentWeek,
         );
   }
 
@@ -135,21 +154,66 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
           ],
         ),
       ),
-      body: BlocBuilder<PaymentScheduleCubit, PaymentScheduleData>(
-        builder: (context, state) {
-          if (state.requestStatus == PaymentScheduleState.loading) {
-            return _buildLoading();
-          } else if (state.requestStatus == PaymentScheduleState.success) {
-            final payments = state.payments!;
-            if (_selectedPayments.isEmpty) {
-              _selectedPayments = List.filled(
-                  payments.length, true); // Initialize with all selected
-            }
-            return _buildSuccess(state.payments);
-          } else {
-            return _buildFailure();
-          }
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Pagos',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  children: [
+                    FlutterSwitch(
+                      width: 85.0,
+                      height: 30.0,
+                      valueFontSize: 12.0,
+                      toggleSize: 25.0,
+                      value: _onlyCurrentWeek,
+                      borderRadius: 20.0,
+                      padding: 4.0,
+                      showOnOff: true,
+                      activeText: 'Semana',
+                      inactiveText: 'Todos',
+                      activeColor: Colors.green, // Color when switch is on
+                      inactiveColor: Colors.blue, // Color when switch is off
+                      onToggle: (bool value) {
+                        setState(() {
+                          _onlyCurrentWeek = value;
+                          startDate = value
+                              ? getMondayOfCurrentWeekMidnight()
+                              : DateTime(2022, 1, 1);
+                          fetchPaymentSchedules();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<PaymentScheduleCubit, PaymentScheduleData>(
+              builder: (context, state) {
+                if (state.requestStatus == PaymentScheduleState.loading) {
+                  return _buildLoading();
+                } else if (state.requestStatus ==
+                    PaymentScheduleState.success) {
+                  final payments = state.payments;
+                  return _buildSuccess(payments);
+                } else {
+                  return _buildFailure();
+                }
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton:
           BlocBuilder<PaymentScheduleCubit, PaymentScheduleData>(
@@ -320,20 +384,8 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
                                       null, // Replace with your actual payment method
                                     )
                                     .then((_) {
-                                  // Call the method to refresh the list of payments
-                                  context
-                                      .read<PaymentScheduleCubit>()
-                                      .fetchPaymentSchedule(
-                                        context,
-                                        widget.borrowerId,
-                                        [
-                                          GPaymentState.PARTIALLY_PAID,
-                                          GPaymentState.PENDING,
-                                          //GPaymentState.PAID_OUT
-                                        ],
-                                        GDateTime(
-                                            widget.dueDate.toIso8601String()),
-                                      );
+                                      // Call the method to refresh the list of payments
+                                      fetchPaymentSchedules();
                                 });
                               },
                               child: Text('Confirmar'),
@@ -382,6 +434,16 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
   }
 
   Widget _buildSuccess(List<ExtendedPaymentSchedule> payments) {
+    double weeklyCollection = 0;
+    double delayedCollection = 0;
+    payments.forEach((payment) {
+      weeklyCollection += double.parse(payment.original.pendingAmount.value);
+      delayedCollection += double.parse(payment.delayedAmount.toString());
+    });
+
+    final double maximumCollection = weeklyCollection + delayedCollection;
+    final int countCV = payments.where((payment) => double.parse(payment.delayedAmount.toString()) > 0).length;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: CustomScrollView(
@@ -393,38 +455,29 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
                 Container(
                   width: double.infinity,
                   child: Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Resumen de Pagos',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text('Cobranza Maxima: $maximumCollection'),
+                              Visibility(
+                                visible: !_onlyCurrentWeek,
+                                child: Text('Total CV: $weeklyCollection'),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Total a pagar: \$${10}', // Replace with your actual total to pay
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            'Numero de clientas: ${5}', // Replace with your actual number of clients
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            'Pendiente: \$${2}', // Replace with your actual pending amount
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          Text(
-                            'CV: ${3}', // Replace with your actual CV
-                            style: TextStyle(fontSize: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text('Total Clientas: ${payments.length}'),
+                              Visibility(
+                                visible: !_onlyCurrentWeek,
+                                child: Text('Total Clientas CV: $countCV'),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -498,7 +551,10 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
                                 controller: isEditing
                                     ? _controller
                                     : TextEditingController(
-                                        text: NumberFormat.currency(symbol: '\$').format(payment.currentPaymentAmount)),
+                                        text: NumberFormat.currency(
+                                                symbol: '\$')
+                                            .format(
+                                                payment.currentPaymentAmount)),
                                 focusNode: isEditing ? _focusNode : null,
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: true),
@@ -532,25 +588,25 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
                             ),
                           if (payment.delayedAmount > 0)
                             Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.warning,
-                                color: Colors.red,
-                                size: 16.0,
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.warning,
+                                    color: Colors.red,
+                                    size: 16.0,
+                                  ),
+                                  SizedBox(width: 4.0),
+                                  Text(
+                                    'cv: ${NumberFormat.currency(symbol: '\$').format(payment.delayedAmount)}',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 4.0),
-                              Text(
-                                'cv: ${NumberFormat.currency(symbol: '\$').format(payment.delayedAmount)}',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                            ),
                         ],
                       ),
                       trailing: Row(
@@ -574,8 +630,7 @@ class _WeeklyPaymentsComponentState extends State<WeeklyPaymentsComponent> {
                           });
                         },
                       ),
-                    )
-                  );
+                    ));
               },
               childCount: payments.length,
             ),

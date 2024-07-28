@@ -132,6 +132,9 @@ class _$GgetPaymentSchedulesData_getPaymentSchedulesSerializer
       'updatedAt',
       serializers.serialize(object.updatedAt,
           specifiedType: const FullType(_i2.GDateTime)),
+      'weecklyPendingAmount',
+      serializers.serialize(object.weecklyPendingAmount,
+          specifiedType: const FullType(_i2.GDecimal)),
       'borrower',
       serializers.serialize(object.borrower,
           specifiedType: const FullType(
@@ -220,6 +223,10 @@ class _$GgetPaymentSchedulesData_getPaymentSchedulesSerializer
         case 'updatedAt':
           result.updatedAt.replace(serializers.deserialize(value,
               specifiedType: const FullType(_i2.GDateTime))! as _i2.GDateTime);
+          break;
+        case 'weecklyPendingAmount':
+          result.weecklyPendingAmount.replace(serializers.deserialize(value,
+              specifiedType: const FullType(_i2.GDecimal))! as _i2.GDecimal);
           break;
         case 'borrower':
           result.borrower.replace(serializers.deserialize(value,
@@ -516,6 +523,8 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
   @override
   final _i2.GDateTime updatedAt;
   @override
+  final _i2.GDecimal weecklyPendingAmount;
+  @override
   final GgetPaymentSchedulesData_getPaymentSchedules_borrower borrower;
 
   factory _$GgetPaymentSchedulesData_getPaymentSchedules(
@@ -541,6 +550,7 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
       required this.dueDate,
       required this.createdAt,
       required this.updatedAt,
+      required this.weecklyPendingAmount,
       required this.borrower})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(G__typename,
@@ -571,6 +581,10 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
         r'GgetPaymentSchedulesData_getPaymentSchedules', 'createdAt');
     BuiltValueNullFieldError.checkNotNull(updatedAt,
         r'GgetPaymentSchedulesData_getPaymentSchedules', 'updatedAt');
+    BuiltValueNullFieldError.checkNotNull(
+        weecklyPendingAmount,
+        r'GgetPaymentSchedulesData_getPaymentSchedules',
+        'weecklyPendingAmount');
     BuiltValueNullFieldError.checkNotNull(
         borrower, r'GgetPaymentSchedulesData_getPaymentSchedules', 'borrower');
   }
@@ -604,6 +618,7 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
         dueDate == other.dueDate &&
         createdAt == other.createdAt &&
         updatedAt == other.updatedAt &&
+        weecklyPendingAmount == other.weecklyPendingAmount &&
         borrower == other.borrower;
   }
 
@@ -625,6 +640,7 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
     _$hash = $jc(_$hash, dueDate.hashCode);
     _$hash = $jc(_$hash, createdAt.hashCode);
     _$hash = $jc(_$hash, updatedAt.hashCode);
+    _$hash = $jc(_$hash, weecklyPendingAmount.hashCode);
     _$hash = $jc(_$hash, borrower.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -649,6 +665,7 @@ class _$GgetPaymentSchedulesData_getPaymentSchedules
           ..add('dueDate', dueDate)
           ..add('createdAt', createdAt)
           ..add('updatedAt', updatedAt)
+          ..add('weecklyPendingAmount', weecklyPendingAmount)
           ..add('borrower', borrower))
         .toString();
   }
@@ -734,6 +751,12 @@ class GgetPaymentSchedulesData_getPaymentSchedulesBuilder
   set updatedAt(_i2.GDateTimeBuilder? updatedAt) =>
       _$this._updatedAt = updatedAt;
 
+  _i2.GDecimalBuilder? _weecklyPendingAmount;
+  _i2.GDecimalBuilder get weecklyPendingAmount =>
+      _$this._weecklyPendingAmount ??= new _i2.GDecimalBuilder();
+  set weecklyPendingAmount(_i2.GDecimalBuilder? weecklyPendingAmount) =>
+      _$this._weecklyPendingAmount = weecklyPendingAmount;
+
   GgetPaymentSchedulesData_getPaymentSchedules_borrowerBuilder? _borrower;
   GgetPaymentSchedulesData_getPaymentSchedules_borrowerBuilder get borrower =>
       _$this._borrower ??=
@@ -765,6 +788,7 @@ class GgetPaymentSchedulesData_getPaymentSchedulesBuilder
       _dueDate = $v.dueDate.toBuilder();
       _createdAt = $v.createdAt.toBuilder();
       _updatedAt = $v.updatedAt.toBuilder();
+      _weecklyPendingAmount = $v.weecklyPendingAmount.toBuilder();
       _borrower = $v.borrower.toBuilder();
       _$v = null;
     }
@@ -817,6 +841,7 @@ class GgetPaymentSchedulesData_getPaymentSchedulesBuilder
               dueDate: dueDate.build(),
               createdAt: createdAt.build(),
               updatedAt: updatedAt.build(),
+              weecklyPendingAmount: weecklyPendingAmount.build(),
               borrower: borrower.build());
     } catch (_) {
       late String _$failedField;
@@ -838,6 +863,8 @@ class GgetPaymentSchedulesData_getPaymentSchedulesBuilder
         createdAt.build();
         _$failedField = 'updatedAt';
         updatedAt.build();
+        _$failedField = 'weecklyPendingAmount';
+        weecklyPendingAmount.build();
         _$failedField = 'borrower';
         borrower.build();
       } catch (e) {
